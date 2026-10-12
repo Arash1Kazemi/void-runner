@@ -1,0 +1,6 @@
+# compiled output (make it with build.cmd)
+build/
+tests/stage0/build/
+# local tool settings
+.claude/
+__pycache__/
