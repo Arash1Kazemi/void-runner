@@ -1,0 +1,65 @@
+# Stage 1 automated check (run from the project folder:
+#   wokwi-cli --scenario tests/scenarios/stage1_check.yaml .)
+# Captures the logo at five moments and the title screen as text, walks through the
+# menu with the real keypad buttons, and checks the mute and brightness keys.
+name: VOID RUNNER stage 1 check
+version: 1
+author: VOID RUNNER team
+
+steps:
+  - wait-serial: '[VR] screen logo'
+
+  # 1) logo frames (times are from the start of the logo)
+  - delay: 600ms        # warp
+  - write-serial: '!d'
+  - wait-serial: '[DUMP] end'
+  - delay: 1050ms       # ship braking (~1700 ms)
+  - write-serial: '!d'
+  - wait-serial: '[DUMP] end'
+  - delay: 1750ms       # letters and drones (~3500 ms)
+  - write-serial: '!d'
+  - wait-serial: '[DUMP] end'
+  - delay: 650ms        # RUNNER banner (~4200 ms)
+  - write-serial: '!d'
+  - wait-serial: '[DUMP] end'
+  - delay: 1050ms       # final glow (~5300 ms)
+  - write-serial: '!d'
+  - wait-serial: '[DUMP] end'
+
+  # 2) title screen
+  - wait-serial: '[VR] screen title'
+  - delay: 1000ms
+  - write-serial: '!d'
+  - wait-serial: '[DUMP] end'
+
+  # 3) menu: open, move down to SHIP, open the hangar, back, back
+  - set-control: { part-id: btn_R, control: pressed, value: 1 }
+  - wait-serial: '[VR] screen menu'
+  - set-control: { part-id: btn_R, control: pressed, value: 0 }
+  - delay: 100ms
+  - set-control: { part-id: btn_S, control: pressed, value: 1 }
+  - delay: 100ms
+  - set-control: { part-id: btn_S, control: pressed, value: 0 }
+  - delay: 100ms
+  - write-serial: '!d'
+  - wait-serial: '[DUMP] end'
+  - set-control: { part-id: btn_R, control: pressed, value: 1 }
+  - wait-serial: '[VR] screen hangar'
+  - set-control: { part-id: btn_R, control: pressed, value: 0 }
+  - delay: 100ms
+  - set-control: { part-id: btn_Q, control: pressed, value: 1 }
+  - wait-serial: '[VR] screen menu'
+  - set-control: { part-id: btn_Q, control: pressed, value: 0 }
+  - delay: 100ms
+  - set-control: { part-id: btn_Q, control: pressed, value: 1 }
+  - wait-serial: '[VR] screen title'
+  - set-control: { part-id: btn_Q, control: pressed, value: 0 }
+
+  # 4) global keys
+  - set-control: { part-id: btn_M, control: pressed, value: 1 }
+  - wait-serial: '[VR] sound off'
+  - set-control: { part-id: btn_M, control: pressed, value: 0 }
+  - delay: 100ms
+  - set-control: { part-id: btn_B, control: pressed, value: 1 }
+  - wait-serial: '[VR] brightness 50'
+  - set-control: { part-id: btn_B, control: pressed, value: 0 }
