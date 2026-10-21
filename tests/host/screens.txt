@@ -1,0 +1,116 @@
+# Every screen with the real keys: logo, title, menu, hangar, options, LED test, best,
+# a game with pause, game over, the global keys, and a power cycle (EEPROM).
+until "[VR] saved: best=0 ship=0 difficulty=1"
+until "[VR] screen logo"
+run 2000
+tap R
+until "[VR] screen title"
+run 500
+dump
+tap R
+until "[VR] screen menu"
+dump
+
+# SHIP: the hangar, choose DART
+tap S
+tap R
+until "[VR] screen hangar"
+run 400
+dump
+tap D
+run 400
+dump
+tap R
+until "[VR] ship DART"
+until "[VR] screen menu"
+
+# OPTS: difficulty HARD, then the LED test
+tap S
+tap R
+until "[VR] screen options"
+dump
+tap S
+tap S
+tap D
+until "[VR] option DIFF 2"
+dump
+tap S
+tap R
+until "[VR] screen ledtest"
+run 800
+dump
+run 1500
+dump
+run 2500
+dump
+run 1500
+dump
+until "[VR] screen options" 10000
+tap Q
+until "[VR] screen menu"
+
+# BEST before any game
+tap S
+tap R
+until "[VR] screen best"
+dump
+tap Q
+until "[VR] screen menu"
+
+# PLAY with DART on HARD: 3 lives, 40 ammo; pause and continue; lose
+tap W
+tap W
+tap W
+tap R
+until "[VR] phase 1"
+send !s
+until "lives=3 ammo=40"
+send !i
+send !x
+run 15000
+tap P
+until "[VR] screen pause"
+run 1000
+dump
+tap P
+until "[VR] screen game"
+run 1000
+send !k
+until "[VR] game over score="
+until "[VR] screen gameover" 5000
+until "[VR] new best" 100
+run 1500
+dump
+run 1500
+dump
+tap R
+until "[VR] screen menu"
+
+# global keys
+tap B
+until "[VR] brightness 50"
+tap M
+until "[VR] sound off"
+tap M
+until "[VR] sound on"
+
+# BEST after the game
+tap S
+tap S
+tap S
+tap R
+until "[VR] screen best"
+dump
+
+# power off and on: settings and best score come back from the EEPROM
+reset
+until "[VR] saved: best="
+until " ship=1 difficulty=2"
+
+# demo: the title screen untouched for 20 s starts a demo game; any key ends it
+until "[VR] screen title" 10000
+until "[VR] demo" 25000
+run 4000
+dump
+tap S
+until "[VR] screen title"

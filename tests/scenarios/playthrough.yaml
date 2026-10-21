@@ -1,0 +1,59 @@
+# Whole game, played by the autopilot (run from the project folder:
+#   wokwi-cli --timeout 180000 --scenario tests/scenarios/playthrough.yaml .)
+# Shield on (!i), autopilot on (!x), fast mode (!f, 8 game steps per picture), then a
+# new game (!1). Checks that all three phases, warnings, bosses and the victory screen
+# come in order, and prints the game state (!s) and the screen (!d) along the way.
+name: VOID RUNNER full playthrough
+version: 1
+author: VOID RUNNER team
+
+steps:
+  - wait-serial: '[VR] screen logo'
+  - write-serial: '!i'
+  - wait-serial: '[VR] shield on'
+  - write-serial: '!x'
+  - wait-serial: '[VR] autopilot on'
+  - write-serial: '!f'
+  - wait-serial: '[VR] fast on'
+  - write-serial: '!1'
+  - wait-serial: '[VR] phase 1'
+  - delay: 2500ms
+  - write-serial: '!d'
+  - wait-serial: '[DUMP] end'
+  - write-serial: '!s'
+  - wait-serial: '[VR] warning'
+  - wait-serial: '[VR] boss'
+  - delay: 700ms
+  - write-serial: '!d'
+  - wait-serial: '[DUMP] end'
+  - write-serial: '!s'
+  - wait-serial: '[VR] boss down'
+  - wait-serial: '[VR] phase clear'
+  - wait-serial: '[VR] phase 2'
+  - delay: 2500ms
+  - write-serial: '!d'
+  - wait-serial: '[DUMP] end'
+  - write-serial: '!s'
+  - wait-serial: '[VR] warning'
+  - wait-serial: '[VR] boss'
+  - delay: 700ms
+  - write-serial: '!d'
+  - wait-serial: '[DUMP] end'
+  - write-serial: '!s'
+  - wait-serial: '[VR] boss down'
+  - wait-serial: '[VR] phase 3'
+  - delay: 2500ms
+  - write-serial: '!d'
+  - wait-serial: '[DUMP] end'
+  - write-serial: '!s'
+  - wait-serial: '[VR] warning'
+  - wait-serial: '[VR] boss'
+  - wait-serial: '[VR] boss form 2'
+  - write-serial: '!d'
+  - wait-serial: '[DUMP] end'
+  - wait-serial: '[VR] boss down'
+  - wait-serial: '[VR] screen victory'
+  - wait-serial: '[VR] victory score='
+  - delay: 1500ms
+  - write-serial: '!d'
+  - wait-serial: '[DUMP] end'

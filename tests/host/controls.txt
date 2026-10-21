@@ -1,0 +1,70 @@
+# The agreed key rules, pressed on the real (simulated) keypad during phase 1's intro,
+# before any enemy arrives. The ship starts at x=6 y=20 with 60 ammo (BOLT).
+until "[VR] screen logo"
+send !i
+send !1
+until "[VR] phase 1"
+send !s
+until "ammo=60 x=6 y=20"
+
+# tap = one pixel
+tap D
+send !s
+until "ammo=60 x=7 y=20"
+
+# hold = glide (first pixel at once, then after 170 ms one pixel every 70 ms)
+down A
+run 500
+up A
+run 50
+send !s
+until "ammo=60 x=2 y=20"
+
+# up is limited to row 9, so the ship stays in the lower part of the screen
+down W
+run 1500
+up W
+run 50
+send !s
+until "x=2 y=9"
+down S
+run 1500
+up S
+run 50
+
+# tap R = one bullet
+tap R
+send !s
+until "ammo=59 x=2 y=21"
+
+# hold R = auto-fire, one bullet every 200 ms (0, 200, 400, 600, 800 ms)
+down R
+run 900
+up R
+run 50
+send !s
+until "ammo=54 "
+
+# a move key stops the fire, even with R still held; the ship moves instead
+down R
+run 300
+down D
+run 400
+up D
+run 400
+up R
+run 50
+send !s
+until "ammo=52 x=6 y=21"
+
+# while R is held, a held move key does not glide; letting go of R lets it glide again
+down D
+run 300
+down R
+run 400
+up R
+run 200
+up D
+run 50
+send !s
+until "ammo=50 x=12 y=21"

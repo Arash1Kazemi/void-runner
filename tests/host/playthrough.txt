@@ -1,0 +1,38 @@
+# Whole game played by the autopilot (shield on, normal speed): all three phases,
+# warnings, bosses (with the Void King's second form) and the victory screen.
+until "[VR] screen logo"
+send !i
+send !x
+send !1
+until "[VR] phase 1"
+run 3000
+dump
+until "[VR] warning" 200000
+send !s
+until "[VR] boss" 10000
+run 3000
+dump
+send !s
+until "[VR] boss down" 120000
+until "[VR] phase clear" 10000
+until "[VR] phase 2" 10000
+until "[VR] warning" 200000
+send !s
+until "[VR] boss" 10000
+run 3000
+dump
+until "[VR] boss down" 120000
+until "[VR] phase 3" 10000
+until "[VR] warning" 200000
+send !s
+until "[VR] boss" 10000
+run 3000
+dump
+until "[VR] boss form 2" 120000
+run 500
+dump
+until "[VR] boss down" 120000
+until "[VR] screen victory" 10000
+until "[VR] victory score=" 100
+run 2000
+dump
