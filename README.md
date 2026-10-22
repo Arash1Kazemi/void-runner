@@ -77,3 +77,7 @@ Serial test commands (type them in the Wokwi terminal, always with `!`): `!d` sc
 - `tools/render_dumps.py` – turns screen dumps into a PNG or an animated GIF
 - `tools/media_record.script` – PC-harness script that records the clips in `docs/media/`
 - `tools/led_style_preview.html` – compares LED colour styles with Wokwi's real LED part
+- `tools/led_brightness_preview.html` – how bright a lit LED looks for different `gamma` values
+- `tools/text_preview.html` – live comparison of scrolling text vs. still pages, the way Wokwi
+  shows them (serve the project folder, e.g. `python -m http.server`, then open
+  `/tools/text_preview.html`)

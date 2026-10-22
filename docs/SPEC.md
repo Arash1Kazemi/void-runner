@@ -5,7 +5,8 @@ built from single push buttons, and three buzzers. Simulation only (Wokwi for VS
 wokwi.com). Three phases, each with its own enemies, space rocks and a boss.
 
 Pictures of the real screens (rendered from the running code): `docs/media/` –
-`screens_menus.png`, `screens_game.png`, `screens_ledtest.png` and animations
+`screens_menus.png`, `screens_game.png`, `screens_texts.png` (every message page),
+`screens_ledtest.png` and animations
 `logo.gif`, `phase1.gif`, `warden.gif`, `king.gif`, `victory.gif`.
 
 ---
@@ -203,7 +204,8 @@ picture, `!1`–`!3` start at a phase, `!b` skip to the boss, `!w` boss loses it
 | 3 | Enemies + rocks, pickups, collisions, scoring | ✓ built + tested (PC) |
 | 4–5 | Bosses, three phases, phase flow | ✓ built + tested (PC, Wokwi) |
 | 6 | Hangar, options, high score, pause, game over, victory, LED test, demo | ✓ built + tested (PC) |
-| 7 | Integration tests, balance, docs | ✓ done – your test in VS Code next |
+| 7 | Integration tests, balance, docs | ✓ done |
+| 8 | After your first VS Code test (22 Oct): brighter LEDs (gamma 30, fps 300), no debris for normal enemies, no background stars, all text as still pages, a description above every function | ✓ done – your next test in VS Code |
 
 ## 12. Project layout
 
@@ -213,7 +215,8 @@ project 1/
 ├─ diagram.json      the circuit (generated)
 ├─ wokwi.toml        Wokwi for VS Code → build/
 ├─ build.cmd         compiles the game into build/
-├─ tools/            circuit + font generators, screen renderer (PNG/GIF), LED style preview
+├─ tools/            circuit + font generators, screen renderer (PNG/GIF), LED style,
+│                    brightness and text previews
 ├─ docs/             this spec, media/ (rendered screens and animations)
 └─ tests/            stage0/, scenarios/ (Wokwi), host/ (PC tests)
 ```
