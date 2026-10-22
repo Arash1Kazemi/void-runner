@@ -1,6 +1,6 @@
 /*
- * title.h -- title screen: the VOID sign stays lit, ships keep flying past it, and a
- * banner "VOID RUNNER - PRESS R" crosses the screen every 7 seconds.
+ * title.h -- title screen: the VOID sign stays lit, ships keep flying past it, and every
+ * 7 seconds a banner shows the pages "PUSH", a big R, "TO", "PLAY".
  */
 #pragma once
 #include "display.h"
@@ -16,14 +16,16 @@ void titleDraw(uint32_t t, uint16_t frameNo) {
   drawBitmap(13, shipY, SHIP_UP, 3, 3, true);
   if (frameNo & 1) setPixel(14, shipY + 3, true);
   uint32_t b = t % 7000;
-  if (b < 3600) {                                  // the banner
+  if (b < 4 * PAGE_MS) {                           // the banner: PUSH, R, TO, PLAY
     fillRect(0, 8, SCREEN_W, 9, false);
     for (uint8_t x = 0; x < SCREEN_W; x++)
       if ((x + t / 60) % 3) {
         setPixel(x, 8, true);
         setPixel(x, 16, true);
       }
-    drawText(16 - (int16_t)(b * 40 / 1000), 9, PSTR("VOID RUNNER - PRESS R"), true);
+    uint8_t page = b / PAGE_MS;
+    if (page == 1) drawChar(5, 9, 'R', true);     // the big R, 5 x 7
+    else drawTextCentered(10, page == 0 ? PSTR("PUSH") : page == 2 ? PSTR("TO") : PSTR("PLAY"), false);
   }
   for (uint8_t bar = 0; bar < STATUS_ROWS; bar++) {      // status bars: a slow chase
     uint8_t head = (t / 120 + bar * 5) % 16;

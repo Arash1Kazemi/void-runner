@@ -121,7 +121,8 @@ void drawBitmap(int16_t x, int16_t y, const uint16_t* rows, uint8_t w, uint8_t h
 // small = 3x5 font (4 pixels per letter), big = 5x7 font (6 pixels per letter).
 // Strings are kept in flash: call with PSTR("TEXT").
 // Draws one letter or digit with its top-left at (x, y); unknown characters are skipped.
-void drawChar(int16_t x, int16_t y, char ch, bool big) {
+// scale = 2 draws every pixel as a 2 x 2 block (the big phase number).
+void drawChar(int16_t x, int16_t y, char ch, bool big, uint8_t scale = 1) {
   const char* chars = big ? FONT5x7_CHARS : FONT3x5_CHARS;
   const char* hit = ch ? strchr_P(chars, ch) : NULL;
   if (!hit) return;
@@ -130,11 +131,11 @@ void drawChar(int16_t x, int16_t y, char ch, bool big) {
   for (uint8_t c = 0; c < w; c++) {
     uint8_t bits = pgm_read_byte(glyph + c);
     for (uint8_t r = 0; r < h; r++)
-      if (bits & (1 << r)) setPixel(x + c, y + r, true);
+      if (bits & (1 << r)) fillRect(x + c * scale, y + r * scale, scale, scale, true);
   }
 }
 
-// Width in pixels of a text in the small or big font (for centring and scrolling).
+// Width in pixels of a text in the small or big font (for centring).
 int16_t textWidth(const char* text, bool big) {
   uint8_t n = strlen_P(text);
   return n ? n * (big ? 6 : 4) - 1 : 0;
@@ -152,19 +153,34 @@ void drawTextCentered(int16_t y, const char* text, bool big) {
   drawText((SCREEN_W - textWidth(text, big)) / 2, y, text, big);
 }
 
-// Text that scrolls from right to left at `pxPerSec`; t = ms since it started.
-// With loop it starts again; returns true once it has left the screen (no loop).
-bool drawTicker(int16_t y, const char* text, uint32_t t, uint8_t pxPerSec, bool loop, bool big) {
-  int16_t travel = SCREEN_W + textWidth(text, big) + 1;
-  int32_t moved = (int32_t)(t * pxPerSec / 1000);
-  if (!loop && moved >= travel) return true;
-  drawText(SCREEN_W - (int16_t)(moved % travel), y, text, big);
-  return false;
+// ================================================================= pages
+// Messages are shown as still "pages" of short words (up to 4 small letters per line),
+// one after another, never as scrolling text: Wokwi averages each LED's brightness, so
+// moving letters smear into a white block that nobody can read.
+const uint16_t PAGE_MS = 900;            // how long one page stays
+
+// Which page of a sequence of `count` pages to show t ms after it started (the last one
+// stays).
+uint8_t pageAt(uint32_t t, uint8_t count) {
+  uint32_t page = t / PAGE_MS;
+  return page < count ? page : count - 1;
 }
 
-// How many ms a ticker text takes to cross the screen once (to time the banners).
-uint32_t tickerMs(const char* text, uint8_t pxPerSec, bool big) {
-  return (uint32_t)(SCREEN_W + textWidth(text, big) + 1) * 1000 / pxPerSec;
+// Switches off h rows of the game screen from row y (a clean background for a page).
+void clearRows(int16_t y, uint8_t h) {
+  fillRect(0, y, SCREEN_W, h, false);
+}
+
+// Draws a page of one or two short lines (from flash) in the white zone, rows 6-17,
+// which is cleared first. line2 may be NULL.
+void drawPage(const char* line1, const char* line2) {
+  clearRows(6, 12);
+  if (line2) {
+    drawTextCentered(7, line1, false);
+    drawTextCentered(13, line2, false);
+  } else {
+    drawTextCentered(10, line1, false);
+  }
 }
 
 // ================================================================= numbers

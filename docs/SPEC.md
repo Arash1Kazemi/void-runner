@@ -33,16 +33,22 @@ the colour film strips on the 1978 Space Invaders cabinet:
 | Status bar 1 | red | phase progress → boss health |
 | Status bar 2 | yellow | ammo (blinks when low) |
 | Status bar 3 | green | lives (one block of 3 LEDs per life) |
-| Game rows 0–5 | red | where enemies and bosses enter, "WARNING" |
-| Game rows 6–17 | white | open space, banners |
+| Game rows 0–5 | red | where enemies and bosses enter, "WARN", "ZONE" |
+| Game rows 6–17 | white | open space, message pages |
 | Game rows 18–23 | green | the player's zone |
 
 **LED brightness:** each LED is lit only 1/27 of the time (one row at a time). Wokwi shows
 an LED's brightness as (share of time on)^(1/gamma), averaged over 100 ms – measured on
 wokwi.com: with the default gamma 2.8 a lit LED showed at only 32 % and the game was hard to
 see on the grey canvas. Every LED has `gamma` = 30 → 90 %, which is what a real multiplexed
-display does by driving each LED harder during its short time slot. Because of the 100 ms
-averaging, everything that blinks stays on/off for at least 160 ms.
+display does by driving each LED harder during its short time slot. Every LED also has
+`fps` = 300: Wokwi averages over 8 updates, so the window is 27 ms instead of 100 ms and
+moving things stay sharp. Everything that blinks stays on/off for at least 160 ms.
+
+**Text:** never scrolls. Scrolling letters smeared into a white block in Wokwi (user test,
+22 Oct). Messages are still **pages** of short words (up to 4 small letters per line, 0.9 s
+each), with big digits and symbols where a word is not needed (`tools/text_preview.html`
+compares the styles).
 
 ## 2. Controls
 
@@ -72,7 +78,7 @@ ship can use rows 9–23. Every enemy is slower than every ship – except the H
 ```
 Start-up logo + melody (5.6 s, any key skips)
         ↓
-Title  ── VOID sign lit, ships flying past, banner "VOID RUNNER - PRESS R"
+Title  ── VOID sign lit, ships flying past, banner pages "PUSH", big R, "TO", "PLAY"
         │  untouched for 20 s → DEMO: the autopilot plays, any key → back to the title
         ↓ R
 Menu   ── PLAY · SHIP · OPTS · BEST   (W/S choose, R open, Q back to the title)
@@ -82,7 +88,7 @@ Menu   ── PLAY · SHIP · OPTS · BEST   (W/S choose, R open, Q back to the 
         │        W/S item, A/D or R change, page dots at the bottom; saved in EEPROM
         └─ BEST: high score and how far it got (P1–P3 or WIN)
 PLAY → Phase 1 → Boss 1 → Phase 2 → Boss 2 → Phase 3 → Boss 3 → VICTORY (fireworks)
-Pause (P or Q): score + phase, "PAUSED - P CONTINUE - Q QUIT"
+Pause (P or Q): score, a big pause sign, pages "P:GO" / "Q:EX"
 GAME OVER: score (blinks for a new record), best score; R or Q → menu
 LED TEST: all LEDs, row sweep, column sweep, checkerboard, with rising beeps
 ```
@@ -106,14 +112,15 @@ crates +20. NORMAL = 3 lives, 100 %, +15. HARD = 3 lives, enemies fire 1.33× fa
 
 ## 5. Phases
 
-Each phase: name scrolls past with a fanfare → waves from a spawn list (`levels.h`) →
-"WARNING" in the red zone + siren while the red bar charges → boss with its own music →
-boss explodes → "PHASE CLEAR", bonus, +1 life.
+Each phase: pages "ZONE" + big phase number, the phase name, "GO!" with a fanfare → waves
+from a spawn list (`levels.h`) → "WARN" + a blinking warning sign + siren while the red bar
+charges → boss with its own music → boss explodes → pages "ZONE DONE", bonus "PTS",
+"LIFE UP". Victory: fireworks + pages "YOU WIN!", "VOID SAFE", score.
 
 | Phase | Enemies | Boss |
 |---|---|---|
-| 1 – Asteroid Belt | Drone (sinks, shoots straight down), many rocks | **WARDEN** – wide (10 × 4), slides along the top, 3-way spread, drops rocks; below half health faster with a 5-way spread |
-| 2 – Nebula | Weaver (zig-zags), Mine-layer (crosses the top, drops blinking mines that can be shot), drones | **HUNTER** – small and FAST: dashes to a new spot, fires an aimed pair; every 7 s blinks and dives at the player |
+| 1 – ROCK BELT (asteroids) | Drone (sinks, shoots straight down), many rocks | **WARDEN** – wide (10 × 4), slides along the top, 3-way spread, drops rocks; below half health faster with a 5-way spread |
+| 2 – DEEP MIST (a nebula) | Weaver (zig-zags), Mine-layer (crosses the top, drops blinking mines that can be shot), drones | **HUNTER** – small and FAST: dashes to a new spot, fires an aimed pair; every 7 s blinks and dives at the player |
 | 3 – The Void | Cruiser (5 hits, stops near the top, aimed shots), everything else, rock showers | **VOID KING** – huge (12 × 5), 5-way spread, calls in drones; at half health the eye opens (roar, shake): aimed triple volleys and rock rain |
 
 Boss health: WARDEN 24, HUNTER 22, VOID KING 40 (× difficulty).

@@ -49,6 +49,10 @@ STATUS_COLOURS = [('#ff3a3a', '#3a1818'), ('#ffd23a', '#3a3214'), ('#3aff4a', '#
 # display gets the same effect by driving each LED harder during its short time slot.
 # (tools/led_brightness_preview.html compares the values.)
 LED_GAMMA = '30'
+# How often Wokwi updates an LED's brightness. It averages over 8 updates, so the default
+# 80 gives a 100 ms window and anything moving smears over several pixels; 300 gives
+# 27 ms (about two full screen scans), which keeps moving things sharp.
+LED_FPS = '300'
 
 # Keypad, row by row: (label, PC keyboard key, button colour).
 BUTTONS = [
@@ -164,7 +168,7 @@ for row in range(TOTAL_ROWS):
     light, body = led_colours(row)
     for x in range(SCREEN_W):
         lx, ly = led_xy(x, row)
-        part('wokwi-led', led_id(x, row), lx, ly, {'color': body, 'lightColor': light, 'gamma': LED_GAMMA})
+        part('wokwi-led', led_id(x, row), lx, ly, {'color': body, 'lightColor': light, 'gamma': LED_GAMMA, 'fps': LED_FPS})
 for row in range(TOTAL_ROWS):                         # anodes of one row
     for x in range(SCREEN_W - 1):
         wire('%s:A' % led_id(x, row), '%s:A' % led_id(x + 1, row), '', [], 'hidden')

@@ -192,17 +192,14 @@ Screen bestFrame(uint16_t frameNo) {
 }
 
 // ================================================================= pause
-const char TEXT_PAUSED[] PROGMEM = "PAUSED - P CONTINUE - Q QUIT";
-
-// Draws the pause screen: score, scrolling "PAUSED - P CONTINUE - Q QUIT", the phase
-// and the game's status bars.
+// Draws the pause screen: the score, a big pause sign, and the keys as a page that
+// changes every 1.2 s ("P:GO" = P continues, "Q:EX" = Q exits), with the game's bars.
 void pauseDraw(uint32_t t, uint16_t frameNo) {
   clearScreen();
   drawNumberCentered(0, player.score, false);
-  fillRect(0, 7, SCREEN_W, 9, false);
-  drawTicker(8, TEXT_PAUSED, t, 30, true, true);
-  drawText(4, 18, PSTR("P"), false);
-  drawNumber(8, 18, game.phase + 1, false);
+  fillRect(4, 7, 3, 9, true);            // the pause sign: two bars
+  fillRect(9, 7, 3, 9, true);
+  drawTextCentered(18, (t / 1200) % 2 ? PSTR("Q:EX") : PSTR("P:GO"), false);
   drawGameStatus(frameNo);
 }
 
@@ -234,12 +231,11 @@ Screen gameOverFrame(uint32_t t, uint16_t frameNo) {
   return SCR_GAMEOVER;
 }
 
-const char TEXT_VICTORY[] PROGMEM = "VICTORY! THE VOID IS SAFE";
 uint32_t nextFirework = 0;
 
-// One picture of the victory screen: fireworks, scrolling text, the score and racing
-// status bars; after 2 s, R or Q goes to the menu.
-Screen victoryFrame(uint32_t t, uint16_t frameNo) {
+// One picture of the victory screen: fireworks, pages "YOU WIN!", "VOID SAFE" and the
+// score, and racing status bars; after 2 s, R or Q goes to the menu.
+Screen victoryFrame(uint32_t t) {
   if (t > 2000 && (keyPressed(KEY_FIRE) || keyPressed(KEY_BACK))) return SCR_MENU;
   if (t >= nextFirework) {               // fireworks in the red and green zones
     bool top = random(2);
@@ -251,9 +247,16 @@ Screen victoryFrame(uint32_t t, uint16_t frameNo) {
   clearScreen();
   for (uint8_t i = 0; i < MAX_PARTICLES; i++)
     if (particles[i].life) setPixel(particles[i].x16 >> 4, particles[i].y16 >> 4, true);
-  fillRect(0, 7, SCREEN_W, 9, false);
-  drawTicker(8, TEXT_VICTORY, t, 35, true, true);
-  if (frameNo & 32) drawNumberCentered(18, player.score, false);
+  uint8_t page = (t / 1200) % 3;
+  if (page == 0) {
+    drawPage(PSTR("YOU"), PSTR("WIN!"));
+  } else if (page == 1) {
+    drawPage(PSTR("VOID"), PSTR("SAFE"));
+  } else {
+    clearRows(6, 12);
+    drawNumberCentered(7, player.score, false);
+    drawTextCentered(13, PSTR("PTS"), false);
+  }
   for (uint8_t bar = 0; bar < STATUS_ROWS; bar++) {   // status bars: a fast chase
     uint8_t head = (t / 50 + bar * 4) % 16;
     uint16_t bits = 0;

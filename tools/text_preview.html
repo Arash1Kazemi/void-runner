@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Text readability preview</title>
+<!--
+  Compares ways of showing text on the VOID RUNNER screen, drawn with Wokwi's real LED
+  element the way Wokwi shows our multiplexed screen: each LED's on-time is averaged over
+  8 subframes of 1/fps seconds (fps 80 = 100 ms) and shown as (duty)^(1/gamma), gamma 30.
+  Uses the game's real fonts (void_runner/font.h). Serve the project folder and open
+  /tools/text_preview.html.
+-->
+<style>
+  body { background: #2d2d2d; color: #ddd; font: 14px sans-serif; margin: 10px; }
+  .row { display: flex; gap: 18px; flex-wrap: wrap; }
+  .box { width: 260px; }
+  h3 { margin: 2px 0 2px; font-size: 15px; }
+  p { margin: 0 0 6px; font-size: 12px; color: #aaa; height: 32px; }
+  .scale { transform: scale(0.36); transform-origin: top left; width: 254px; height: 470px; }
+  .panel { display: grid; grid-template-columns: repeat(16, 44px); grid-auto-rows: 46px; width: 704px; }
+  .gap { grid-column: 1 / span 16; height: 24px; }
+  #phase { font-size: 13px; color: #ffd23a; margin: 4px 0 8px; }
+</style>
+<script type="module">
+import 'https://cdn.jsdelivr.net/npm/@wokwi/elements@1.9.2/+esm';
+
+// ---- the game's fonts, read from font.h
+const src = await (await fetch('../void_runner/font.h')).text();
+function font(name) {
+  const chars = src.match(new RegExp(name + '_CHARS\\[\\] PROGMEM = "(.*)";'))[1];
+  const body = src.split(name + '[] PROGMEM = {')[1].split('};')[0];
+  return { chars, bytes: [...body.matchAll(/0x([0-9A-F]{2})/g)].map(m => parseInt(m[1], 16)) };
+}
+const SMALL = font('FONT3x5'), BIG = font('FONT5x7');
+
+// ---- drawing into a 27-row picture (rows 0-23 game screen, 24-26 status bars)
+const W = 16, H = 24, ROWS = 27;
+const newFrame = () => new Array(ROWS).fill(0);
+function px(f, x, y) { if (x >= 0 && x < W && y >= 0 && y < H) f[y] |= 1 << x; }
+function rect(f, x, y, w, h) { for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) px(f, i, j); }
+function ch(f, x, y, c, big, scale = 1) {
+  const fn = big ? BIG : SMALL, w = big ? 5 : 3, h = big ? 7 : 5, i = fn.chars.indexOf(c);
+  if (i < 0) return;
+  for (let col = 0; col < w; col++) {
+    const bits = fn.bytes[i * w + col];
+    for (let r = 0; r < h; r++) if (bits & (1 << r)) rect(f, x + col * scale, y + r * scale, scale, scale);
+  }
+}
+const textW = (t, big) => t.length * (big ? 6 : 4) - 1;
+function text(f, x, y, t, big) { [...t].forEach((c, i) => ch(f, x + i * (big ? 6 : 4), y, c, big)); }
+function centered(f, y, t, big) { text(f, Math.floor((W - textW(t, big)) / 2), y, t, big); }
+function ticker(f, y, t, ms, speed, big) {
+  const travel = W + textW(t, big) + 1, moved = Math.floor(ms * speed / 1000) % travel;
+  text(f, W - moved, y, t, big);
+}
+function clearBand(f, y, h) { for (let j = y; j < y + h; j++) f[j] = 0; }
+function shape(f, x, y, rows) { rows.forEach((r, j) => [...r].forEach((c, i) => c === '#' && px(f, x + i, y + j))); }
+const TRIANGLE = ['.....#.....', '....#.#....', '....#.#....', '...#...#...', '...#.#.#...',
+                  '..#..#..#..', '..#..#..#..', '.#.......#.', '.#...#...#.', '###########'];
+
+// ---- what every panel shares: the ship, a bullet flying up, status bars
+function scene(f, t) {
+  shape(f, 6, 21, ['.#.', '###', '###']);
+  const by = 20 - Math.floor((t % 900) / 35);              // bullet: 35 ms per pixel, like the game
+  if (by >= 0) { px(f, 7, by); px(f, 7, by + 1); }
+  f[24] = 0x0fff; f[25] = 0x03ff; f[26] = 0x0777;
+}
+
+// ---- the three ways (t = ms inside the 14 s loop)
+const PART = [[0, 5000, 'phase intro'], [5000, 9000, 'WARNING'], [9000, 14000, 'pause']];
+function pages(t0, t, list) { return list[Math.min(list.length - 1, Math.floor((t - t0) / 900))]; }
+
+function now(f, t) {                                       // what the game does today
+  scene(f, t);
+  if (t < 5000) { clearBand(f, 8, 7); ticker(f, 8, 'PHASE 1 - ASTEROID BELT', t, 45, true); }
+  else if (t < 9000) { clearBand(f, 0, 5); ticker(f, 0, 'WARNING', t - 5000, 15, false); }
+  else { clearBand(f, 7, 9); ticker(f, 8, 'PAUSED - P CONTINUE - Q QUIT', t - 9000, 30, true); }
+}
+
+function optionA(f, t) {                                   // still word pages only
+  scene(f, t);
+  let lines;
+  if (t < 5000) lines = pages(0, t, [['ZONE', '1'], ['ROCK', 'BELT'], ['GO!']]);
+  else if (t < 9000) lines = (Math.floor(t / 300) % 2) ? ['WARN', 'BOSS'] : [];
+  else lines = pages(9000, t, [['HOLD'], ['P:GO', 'Q:EX'], ['HOLD'], ['P:GO', 'Q:EX'], ['HOLD'], ['P:GO', 'Q:EX']]);
+  clearBand(f, 6, 12);
+  lines.forEach((l, i) => centered(f, 7 + i * 6, l, false));
+}
+
+function recommended(f, t) {                               // word pages + big digit / symbols
+  scene(f, t);
+  clearBand(f, 0, 18);
+  if (t < 5000) {
+    const p = Math.floor(t / 900);
+    if (p === 0) { centered(f, 0, 'ZONE', false); ch(f, 5, 7, '1', false, 2); }   // big digit
+    else if (p === 1) { centered(f, 7, 'ROCK', false); centered(f, 13, 'BELT', false); }
+    else centered(f, 10, 'GO!', false);
+  } else if (t < 9000) {
+    centered(f, 0, 'WARN', false);
+    if (Math.floor(t / 300) % 2) shape(f, 2, 7, TRIANGLE);   // blinking warning sign
+  } else {
+    centered(f, 0, '120', false);                          // the score
+    rect(f, 4, 7, 3, 9); rect(f, 9, 7, 3, 9);              // the pause sign
+    centered(f, 17, Math.floor((t - 9000) / 1200) % 2 ? 'Q:EX' : 'P:GO', false);
+  }
+}
+
+// ---- Wokwi's way of showing it: average over 8 subframes of 1/fps, then gamma 30
+const GAMMA = 30, DUTY = 1 / 27, PICTURE_MS = 20;
+const ZONE = r => r >= 24 ? ['#3a1818', '#3a3214', '#183a1c'][r - 24] : r < 6 ? '#3a1818' : r < 18 ? '#2c2c2c' : '#183a1c';
+const LIGHT = r => r >= 24 ? ['#ff3a3a', '#ffd23a', '#3aff4a'][r - 24] : r < 6 ? '#ff3a3a' : r < 18 ? '#ffffff' : '#3aff4a';
+const ORDER = [24, 25, 26, -1, ...Array.from({ length: 24 }, (_, i) => i)];   // status bars on top
+
+function makePanel(id, title, note, draw, fps) {
+  const box = document.createElement('div');
+  box.className = 'box';
+  box.innerHTML = `<h3>${title}</h3><p>${note}</p>`;
+  const scale = document.createElement('div'), panel = document.createElement('div');
+  scale.className = 'scale'; panel.className = 'panel';
+  const leds = [];
+  for (const r of ORDER) {
+    if (r < 0) { const g = document.createElement('div'); g.className = 'gap'; panel.appendChild(g); continue; }
+    leds[r] = [];
+    for (let x = 0; x < W; x++) {
+      const led = document.createElement('wokwi-led');
+      led.color = ZONE(r); led.lightColor = LIGHT(r);
+      panel.appendChild(led); leds[r][x] = led;
+    }
+  }
+  scale.appendChild(panel); box.appendChild(scale);
+  document.querySelector('.row').appendChild(box);
+  return { draw, windowMs: 8000 / fps, history: [], leds, last: [] };
+}
+
+const panels = [
+  makePanel('now', '1. Now', 'scrolling text, Wokwi fps 80 (100 ms averaging)', now, 80),
+  makePanel('a', '2. Option A alone', 'still word pages, fps 80', optionA, 80),
+  makePanel('rec', '3. Recommended', 'word pages + big digit / symbols, fps 300 (27 ms)', recommended, 300),
+];
+
+let t = 0;
+setInterval(() => {
+  t = (t + PICTURE_MS) % 14000;
+  document.querySelector('#phase').textContent = 'showing: ' + PART.find(p => t >= p[0] && t < p[1])[2];
+  for (const p of panels) {
+    const f = newFrame(); p.draw(f, t);
+    p.history.push(f);
+    const keep = Math.ceil(p.windowMs / PICTURE_MS);
+    while (p.history.length > keep) p.history.shift();
+    for (let r = 0; r < ROWS; r++) for (let x = 0; x < W; x++) {
+      // share of the averaging window this LED was lit (last picture weighted for part windows)
+      let on = 0, total = 0;
+      p.history.forEach((h, i) => {
+        const wgt = (i === 0 && keep * PICTURE_MS > p.windowMs) ? (p.windowMs / PICTURE_MS) % 1 || 1 : 1;
+        total += wgt; if (h[r] & (1 << x)) on += wgt;
+      });
+      const b = on ? Math.pow(DUTY * on / total, 1 / GAMMA) : 0;
+      const key = r * W + x;
+      if (p.last[key] !== b) {
+        p.last[key] = b;
+        const led = p.leds[r][x];
+        led.value = b > 0; led.brightness = b;
+      }
+    }
+  }
+}, PICTURE_MS);
+</script>
+</head>
+<body>
+  <div id="phase"></div>
+  <div class="row"></div>
+</body>
+</html>

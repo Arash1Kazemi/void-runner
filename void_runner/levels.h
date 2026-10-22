@@ -18,7 +18,7 @@ const uint8_t SP_AMMO = 10, SP_LIFE = 11, SP_CLEAR = 12;
 #define RS EN_ROCK_S
 #define RB EN_ROCK_B
 
-// ---- phase 1: Asteroid Belt -- drones and lots of rocks
+// ---- phase 1: Rock Belt (asteroids) -- drones and lots of rocks
 const Spawn PHASE1[] PROGMEM = {
   {15, RS, 3}, {8, RS, 11}, {10, RB, 6}, {12, DR, 2}, {8, DR, 11},
   {10, RS, 7}, {6, RS, 13}, {10, RB, 1}, {12, DR, 6}, {0, DR, 10},
@@ -31,7 +31,7 @@ const Spawn PHASE1[] PROGMEM = {
   {8, RS, 2}, {6, RS, 12}, {10, SP_CLEAR, 0},
 };
 
-// ---- phase 2: Nebula -- weavers and mine-layers
+// ---- phase 2: Deep Mist (a nebula) -- weavers and mine-layers
 const Spawn PHASE2[] PROGMEM = {
   {15, WV, 3}, {10, WV, 10}, {14, MN, 0}, {12, DR, 6}, {10, WV, 1},
   {6, WV, 12}, {14, RS, 7}, {10, MN, 15}, {12, DR, 2}, {0, DR, 11},
@@ -65,18 +65,22 @@ struct PhaseInfo {
   const Spawn* spawns;
   uint8_t count;
   uint8_t maxEnemies;                    // at most this many on the screen at once
-  const char* banner;                    // scrolling title (flash)
+  const char* name1;                     // the phase name: two words of up to 4
+  const char* name2;                     // letters (in flash), shown as a page
   const Track* song;
   uint8_t songTickMs;
   uint8_t boss;
 };
-const char BANNER1[] PROGMEM = "PHASE 1 - ASTEROID BELT";
-const char BANNER2[] PROGMEM = "PHASE 2 - NEBULA";
-const char BANNER3[] PROGMEM = "PHASE 3 - THE VOID";
+const char NAME_ROCK[] PROGMEM = "ROCK";
+const char NAME_BELT[] PROGMEM = "BELT";
+const char NAME_DEEP[] PROGMEM = "DEEP";
+const char NAME_MIST[] PROGMEM = "MIST";
+const char NAME_THE[] PROGMEM = "THE";
+const char NAME_VOID[] PROGMEM = "VOID";
 const PhaseInfo PHASES[3] = {
-  {PHASE1, sizeof(PHASE1) / sizeof(Spawn), 4, BANNER1, SONG_PHASE1, 125, BOSS_KIND_WARDEN},
-  {PHASE2, sizeof(PHASE2) / sizeof(Spawn), 5, BANNER2, SONG_PHASE2, 150, BOSS_KIND_HUNTER},
-  {PHASE3, sizeof(PHASE3) / sizeof(Spawn), 6, BANNER3, SONG_PHASE3, 100, BOSS_KIND_KING},
+  {PHASE1, sizeof(PHASE1) / sizeof(Spawn), 4, NAME_ROCK, NAME_BELT, SONG_PHASE1, 125, BOSS_KIND_WARDEN},
+  {PHASE2, sizeof(PHASE2) / sizeof(Spawn), 5, NAME_DEEP, NAME_MIST, SONG_PHASE2, 150, BOSS_KIND_HUNTER},
+  {PHASE3, sizeof(PHASE3) / sizeof(Spawn), 6, NAME_THE, NAME_VOID, SONG_PHASE3, 100, BOSS_KIND_KING},
 };
 
 // Copies entry i of a phase's spawn list from flash into RAM.

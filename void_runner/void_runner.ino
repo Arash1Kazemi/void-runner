@@ -233,7 +233,7 @@ void drawScreen(uint32_t now) {
       }
       break;
     case SCR_GAMEOVER: next = gameOverFrame(t, frameNo); break;
-    case SCR_VICTORY:  next = victoryFrame(t, frameNo); break;
+    case SCR_VICTORY:  next = victoryFrame(t); break;
     case SCR_LEDTEST:  next = ledTestFrame(t); break;
   }
   if (next != screen) goTo(next);

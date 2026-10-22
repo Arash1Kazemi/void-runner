@@ -2,9 +2,9 @@
  * game.h -- one game, from PLAY to game over or victory.
  *
  * Each of the three phases runs through these stages:
- *   INTRO      the phase name scrolls past, a short fanfare
+ *   INTRO      the phase number and name as pages, a short fanfare
  *   WAVES      enemies and rocks arrive from the phase's spawn list (levels.h)
- *   WARNING    "WARNING" in the red zone, a siren, the red bar charges up
+ *   WARNING    "WARN" and a blinking warning sign, a siren, the red bar charges up
  *   BOSS       boss fight with its own music; the red bar shows the boss's health
  *   BOSS_DOWN  the boss blows up, the screen shakes
  *   CLEAR      bonus points and one extra life, then the next phase (or victory)
@@ -28,23 +28,20 @@ enum GameResult : uint8_t { GAME_ON, GAME_OVER, GAME_WON };
 
 struct Game {
   uint8_t phase, stage, spawnIndex;
-  uint32_t phaseStart, stageStart;       // gameMs
+  uint32_t stageStart;                   // gameMs
   uint32_t nextSpawn, nextAmmoHelp, nextBoom;
   uint16_t bonus;
+  bool lifeUp;                           // the phase clear gave an extra life
 };
 Game game;
 uint8_t gameSpeed = 1;                   // steps per picture (test hook !f: fast)
 bool demoMode = false;                   // the title screen's demo: the autopilot plays
-const char TEXT_DEMO[] PROGMEM = "DEMO - PRESS ANY KEY";
 
-const uint16_t INTRO_MS = 1000, WARNING_MS = 3000, BOSS_DOWN_MS = 2500;
+const uint16_t INTRO_MS = 3 * PAGE_MS, WARNING_MS = 3000, BOSS_DOWN_MS = 2500;
 const uint16_t CLEAR_MS = 3200, DEAD_MS = 2500;
-const uint8_t BANNER_SPEED = 45;         // px per second
 const uint8_t BOSS_TICK_MS = 90;
 const uint16_t PICKUP_STEP_MS = 250;
 const uint8_t DROP_CHANCE = 12;          // % chance that a destroyed enemy drops ammo
-const char TEXT_WARNING[] PROGMEM = "WARNING";
-const char TEXT_CLEAR[] PROGMEM = "PHASE CLEAR";
 
 // ms of game time since the current stage began.
 uint32_t stageTime() {
@@ -69,7 +66,6 @@ void playStageMusic() {
 void phaseBegin(uint8_t phase) {
   game.phase = phase;
   game.spawnIndex = 0;
-  game.phaseStart = gameMs;
   game.nextAmmoHelp = 0;
   worldClear();
   playerStart(false);
@@ -284,7 +280,8 @@ void bossDown() {
 void phaseClear() {
   game.bonus = PHASE_BONUS * (game.phase + 1);
   addScore(game.bonus);
-  if (player.lives < MAX_LIVES) player.lives++;
+  game.lifeUp = player.lives < MAX_LIVES;
+  if (game.lifeUp) player.lives++;
   setStage(GS_CLEAR);
   soundPlaySong(SONG_CLEAR, 90, false);
   Serial.println(F("[VR] phase clear"));
@@ -399,6 +396,46 @@ void drawGameStatus(uint16_t frameNo) {
   setStatusBits(2, lives);
 }
 
+// The messages on top of the game, as still pages (see display.h):
+//   INTRO    "ZONE" + the phase number big, then the phase name, then "GO!"
+//   WARNING  "WARN" in the red zone and a blinking warning sign
+//   CLEAR    "ZONE DONE", the bonus points, "LIFE UP" (if a life was added)
+//   demo     every 9 s: "DEMO", then "ANY KEY"
+void drawGameTexts() {
+  const PhaseInfo& ph = PHASES[game.phase];
+  uint32_t t = stageTime();
+  if (game.stage == GS_INTRO) {
+    uint8_t page = pageAt(t, 3);
+    if (page == 0) {
+      clearRows(0, 18);
+      drawTextCentered(0, PSTR("ZONE"), false);
+      drawChar(5, 7, '1' + game.phase, false, 2);      // 6 x 10 pixels
+    } else if (page == 1) {
+      drawPage(ph.name1, ph.name2);
+    } else {
+      drawPage(PSTR("GO!"), NULL);
+    }
+  } else if (game.stage == GS_WARNING) {
+    clearRows(0, 5);
+    drawTextCentered(0, PSTR("WARN"), false);
+    if ((t / 300) % 2) drawBitmap(2, 7, WARNING_SIGN, 11, 10, true);
+  } else if (game.stage == GS_CLEAR) {
+    uint8_t page = pageAt(t, 3);
+    if (page == 1) {
+      clearRows(6, 12);
+      drawNumberCentered(7, game.bonus, false);
+      drawTextCentered(13, PSTR("PTS"), false);
+    } else if (page == 2 && game.lifeUp) {
+      drawPage(PSTR("LIFE"), PSTR("UP"));
+    } else {
+      drawPage(PSTR("ZONE"), PSTR("DONE"));
+    }
+  } else if (demoMode && gameMs % 9000 < 2 * PAGE_MS) {
+    if (pageAt(gameMs % 9000, 2) == 0) drawPage(PSTR("DEMO"), NULL);
+    else drawPage(PSTR("ANY"), PSTR("KEY"));
+  }
+}
+
 // Draws one picture of the game: pickups, enemies, boss, bullets, ship and explosions
 // (shifted while the screen shakes), then the texts on top and the status bars.
 void drawGame(uint16_t frameNo) {
@@ -430,24 +467,7 @@ void drawGame(uint16_t frameNo) {
     if (particles[i].life) setPixel(particles[i].x16 >> 4, particles[i].y16 >> 4, true);
   shakeX = shakeY = 0;
 
-  uint32_t sincePhase = gameMs - game.phaseStart;   // texts on top
-  const char* banner = PHASES[game.phase].banner;
-  if (sincePhase < tickerMs(banner, BANNER_SPEED, true)) {
-    fillRect(0, 8, SCREEN_W, 7, false);
-    drawTicker(8, banner, sincePhase, BANNER_SPEED, false, true);
-  } else if (demoMode && gameMs % 12000 < tickerMs(TEXT_DEMO, BANNER_SPEED, true)) {
-    fillRect(0, 8, SCREEN_W, 7, false);
-    drawTicker(8, TEXT_DEMO, gameMs % 12000, BANNER_SPEED, false, true);
-  }
-  if (game.stage == GS_WARNING) {
-    fillRect(0, 0, SCREEN_W, 5, false);
-    drawTicker(0, TEXT_WARNING, stageTime(), 15, false, false);
-  }
-  if (game.stage == GS_CLEAR) {
-    fillRect(0, 8, SCREEN_W, 7, false);
-    drawTicker(8, TEXT_CLEAR, stageTime(), BANNER_SPEED, false, true);
-    drawNumberCentered(18, game.bonus, false);
-  }
+  drawGameTexts();
   drawGameStatus(frameNo);
 }
 

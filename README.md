@@ -37,10 +37,10 @@ New **Arduino Mega** project → paste `void_runner/void_runner.ino` into `sketc
 | 1 | Logo + melody, any key skips it; title screen; after 20 s untouched a **demo** plays (any key stops it) |
 | 2 | Menu → **SHIP**: A/D shows BOLT, DART, TWIN (status bars = speed / ammo / fire); R takes one |
 | 3 | Menu → **OPTS**: W/S pages LITE, SND, DIFF, TEST; A/D changes; TEST runs the LED test |
-| 4 | **PLAY**: the phase name scrolls past; moving and firing feel right (tap / hold / R rules) |
+| 4 | **PLAY**: the phase number and name appear as still pages (ZONE 1, ROCK BELT, GO!); moving and firing feel right (tap / hold / R rules) |
 | 5 | Status bars: red = wave progress → boss health, yellow = ammo (blinks when low), green = lives |
 | 6 | Ammo crates and extra lives can be caught; a big rock breaks into two |
-| 7 | "WARNING" + siren, then the boss: WARDEN (phase 1), HUNTER (fast, dives at you), VOID KING (changes form at half health) |
+| 7 | "WARN" + blinking warning sign + siren, then the boss: WARDEN (phase 1), HUNTER (fast, dives at you), VOID KING (changes form at half health) |
 | 8 | P pauses (score shown), P continues, Q quits |
 | 9 | Game over: score, NEW record, BEST page shows it |
 | 10 | Is NORMAL too hard or too easy? Is anything confusing on the small screen? |
