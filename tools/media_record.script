@@ -1,0 +1,29 @@
+# Records gameplay clips for docs/media (PC harness). From the project folder:
+#   build/sim.exe tools/media_record.script   then   python tools/render_dumps.py build/rec_<name>.txt docs/media/<name>.gif
+seed 7
+record build/rec_logo.txt 40
+until "[VR] screen title" 10000
+run 3000
+stop
+send !i
+send !x
+send !1
+until "[VR] phase 1"
+record build/rec_phase1.txt 40
+run 14000
+stop
+until "[VR] boss" 200000
+run 1500
+record build/rec_warden.txt 40
+run 8000
+stop
+send !3
+until "[VR] boss" 200000
+until "[VR] boss form 2" 200000
+record build/rec_king.txt 40
+run 9000
+stop
+until "[VR] screen victory" 200000
+record build/rec_victory.txt 40
+run 6000
+stop
