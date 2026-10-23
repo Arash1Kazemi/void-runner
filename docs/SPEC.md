@@ -6,7 +6,8 @@ wokwi.com). Three phases, each with its own enemies, space rocks and a boss.
 
 Pictures of the real screens (rendered from the running code): `docs/media/` –
 `screens_menus.png`, `screens_game.png`, `screens_texts.png` (every message page),
-`screens_ledtest.png` and animations
+`screens_ledtest.png`, `wiring.png` (simplified wiring diagram, drawn by
+`tools/draw_wiring.py`) and animations
 `logo.gif`, `phase1.gif`, `warden.gif`, `king.gif`, `victory.gif`.
 
 ---

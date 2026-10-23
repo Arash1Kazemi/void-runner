@@ -75,6 +75,7 @@ Serial test commands (type them in the Wokwi terminal, always with `!`): `!d` sc
 
 - `tools/gen_circuit.py` – generates `diagram.json` and `void_runner/pins.h`
 - `tools/gen_font.py` – generates `void_runner/font.h` from ASCII-art letters
+- `tools/draw_wiring.py` – draws `docs/media/wiring.png`, a simplified wiring diagram
 - `tools/compose_music.py` – the in-game songs in a short note notation; writes them into
   `void_runner/tunes.h` (listen to them: `docs/media/music/`)
 - `tools/render_dumps.py` – turns screen dumps into a PNG or an animated GIF
