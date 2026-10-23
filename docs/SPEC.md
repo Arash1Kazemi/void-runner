@@ -87,7 +87,7 @@ Menu   ── PLAY · SHIP · OPTS · BEST   (W/S choose, R open, Q back to the 
         │                  show its speed / ammo / fire power; R = take it, Q = back
         ├─ OPTS: LITE (brightness) · SND (sound) · DIFF (EASY / NORM / HARD) · TEST (LED test)
         │        W/S item, A/D or R change, page dots at the bottom; saved in EEPROM
-        └─ BEST: high score and how far it got (P1–P3 or WIN)
+        └─ BEST: high score and how far it got (ZONE 1–3, or WIN)
 PLAY → Phase 1 → Boss 1 → Phase 2 → Boss 2 → Phase 3 → Boss 3 → VICTORY (fireworks)
 Pause (P or Q): score, a big pause sign, pages "P:GO" / "Q:EX"
 GAME OVER: score (blinks for a new record), best score; R or Q → menu

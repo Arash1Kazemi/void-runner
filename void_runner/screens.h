@@ -167,7 +167,7 @@ Screen optionsFrame(uint16_t frameNo) {
 }
 
 // ================================================================= best score
-// One picture of the BEST page: the high score and how far it got (P1-P3 or WIN).
+// One picture of the BEST page: the high score and how far it got (ZONE 1-3, or WIN).
 Screen bestFrame(uint16_t frameNo) {
   if (keyPressed(KEY_BACK) || keyPressed(KEY_FIRE)) return SCR_MENU;
   clearScreen();
@@ -177,9 +177,9 @@ Screen bestFrame(uint16_t frameNo) {
   else drawTextCentered(9, PSTR("---"), false);
   if (settings.bestPhase >= 4) {
     drawTextCentered(18, PSTR("WIN"), false);
-  } else if (settings.bestPhase) {       // "P2" = reached phase 2
-    drawText(4, 18, PSTR("P"), false);
-    drawNumber(8, 18, settings.bestPhase, false);
+  } else if (settings.bestPhase) {       // the zone it reached: "ZONE", then "2"
+    if ((frameNo / 60) % 2) drawNumberCentered(18, settings.bestPhase, false);
+    else drawTextCentered(18, PSTR("ZONE"), false);
   }
   if (settings.best && (frameNo & 8)) {  // a little sparkle
     setPixel(1, 7, true);
