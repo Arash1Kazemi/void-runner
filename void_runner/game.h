@@ -39,7 +39,6 @@ bool demoMode = false;                   // the title screen's demo: the autopil
 
 const uint16_t INTRO_MS = 3 * PAGE_MS, WARNING_MS = 3000, BOSS_DOWN_MS = 2500;
 const uint16_t CLEAR_MS = 3200, DEAD_MS = 2500;
-const uint8_t BOSS_TICK_MS = 90;
 const uint16_t PICKUP_STEP_MS = 250;
 const uint8_t DROP_CHANCE = 12;          // % chance that a destroyed enemy drops ammo
 
@@ -58,7 +57,7 @@ void setStage(uint8_t stage) {
 void playStageMusic() {
   const PhaseInfo& ph = PHASES[game.phase];
   if (game.stage == GS_WAVES) soundPlaySong(ph.song, ph.songTickMs, true);
-  else if (game.stage == GS_BOSS) soundPlaySong(SONG_BOSS, BOSS_TICK_MS, true);
+  else if (game.stage == GS_BOSS) soundPlaySong(SONG_BOSS, SONG_BOSS_TICK_MS, true);
 }
 
 // Starts a phase: empties the screen, puts the ship back with full ammo, plays the

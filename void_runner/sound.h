@@ -1,10 +1,14 @@
 /*
- * sound.h -- three buzzers = three voices.
+ * sound.h -- four buzzers = four voices.
  *
  * Each buzzer pin is the "A" output of its own 16-bit timer (pin 5 = Timer3, pin 6 =
- * Timer4, pin 11 = Timer1). In CTC mode with "toggle on compare match" the timer flips
- * the pin by itself: a note costs no CPU time, and three notes can sound at once
- * (Arduino's tone() can only play one). The timers run at 16 MHz / 256: notes up to
+ * Timer4, pin 11 = Timer1, pin 46 = Timer5). In CTC mode with "toggle on compare match"
+ * the timer flips the pin by itself: a note costs no CPU time, and four notes can sound
+ * at once (Arduino's tone() can only play one). The Mega has no fifth free timer
+ * (Timer0 runs millis(), Timer2 scans the LED screen).
+ *
+ * Jobs: buzzer 1 = lead, buzzer 2 = bass, buzzer 4 = rhythm guitar / harmony, and
+ * buzzer 3 = every sound effect and menu sound (in the short jingles it plays music too). The timers run at 16 MHz / 256: notes up to
  * about C7 stay within 1 % of their pitch, and Wokwi simulates this slow clock far
  * faster than /8 (measured in Stage 0).
  *
@@ -24,7 +28,9 @@ const TimerRegs VOICE_TIMER[BUZZER_COUNT] = {
   { &TCCR3A, &TCCR3B, &OCR3A, &TCNT3 },  // pin 5  = OC3A
   { &TCCR4A, &TCCR4B, &OCR4A, &TCNT4 },  // pin 6  = OC4A
   { &TCCR1A, &TCCR1B, &OCR1A, &TCNT1 },  // pin 11 = OC1A
+  { &TCCR5A, &TCCR5B, &OCR5A, &TCNT5 },  // pin 46 = OC5A
 };
+const uint8_t SFX_VOICE = 2;             // buzzer 3 (pin 11): sound effects and beeps
 
 struct Note { uint8_t pitch; uint8_t ticks; };   // pitch 0 = rest
 struct Track { const Note* notes; uint8_t count; };
@@ -63,7 +69,7 @@ void buzzerTone(uint8_t v, uint16_t hz) {
   }
   // Mode bits first: in Arduino's default PWM mode a new OCRnA value would wait for the
   // end of a PWM cycle that a stopped timer never reaches, and the note would be lost.
-  *t.tccrA = _BV(COM1A0);                // toggle pin on match (same bit in timers 1, 3, 4)
+  *t.tccrA = _BV(COM1A0);                // toggle pin on match (same bit in timers 1, 3, 4, 5)
   *t.tcnt = 0;
   *t.ocrA = F_CPU / (2UL * 256 * hz) - 1;  // f = 16 MHz / (2 * 256 * (OCRnA + 1))
   *t.tccrB = _BV(WGM12) | _BV(CS12);     // CTC mode, prescaler 256: start
@@ -119,7 +125,7 @@ uint32_t songTime() {
   return millis() - songStart;
 }
 
-// ================================================================= sound effects (voice 3)
+// ================================================================= sound effects (buzzer 3)
 // An effect is a short list of parts in flash. Each part slides from one frequency to
 // another (fromHz == toHz: a steady tone, 0 Hz: a pause) or, with noise set, jumps to a
 // random frequency in that range every few ms (explosions). A new effect only replaces
@@ -143,7 +149,7 @@ void soundSfx(const SfxPart* parts, uint8_t count, uint8_t priority) {
   memcpy_P(&sfxPart, &parts[0], sizeof(SfxPart));
 }
 
-// Stops all music and effects and silences the three buzzers.
+// Stops all music and effects and silences the four buzzers.
 void soundStop() {
   sfxCount = 0;
   for (uint8_t i = 0; i < BUZZER_COUNT; i++) {
@@ -157,7 +163,7 @@ void soundStop() {
 // the frequency, or jumps to a random frequency every 6 ms (noise for explosions).
 void sfxUpdate(uint32_t now) {
   if (!sfxCount) return;
-  Voice& v = voices[BUZZER_COUNT - 1];
+  Voice& v = voices[SFX_VOICE];
   while (now - sfxPartStart >= sfxPart.ms) {
     sfxPartStart += sfxPart.ms;
     if (++sfxIndex == sfxCount) {
@@ -199,7 +205,7 @@ void soundRelease(uint8_t v) {
 // A short beep on buzzer 3 (menus, alerts); it replaces any effect.
 void soundBeep(uint16_t hz, uint16_t ms) {
   sfxCount = 0;                                    // a beep replaces any effect
-  Voice& v = voices[BUZZER_COUNT - 1];
+  Voice& v = voices[SFX_VOICE];
   v.effect = true;
   v.effectHz = hz;
   v.effectEnd = millis() + ms;

@@ -7,7 +7,7 @@ pin table for the sketch (pins.h), so the circuit and the code can never disagre
 
   * 16 x 24 game screen + 3 status bars of single LEDs, wired as one row/column matrix
   * 4 x 4 push-button keypad (every button also answers to a PC keyboard key)
-  * 3 buzzers
+  * 4 buzzers
 
 Layout: LED panel on the left, the Mega (turned 180 degrees) on the right with its
 double header facing the panel rows and its analog header facing up for the panel
@@ -130,10 +130,12 @@ def mega_pin(name):
 
 # Rows: the double header, read top to bottom on the turned board. At each height the even
 # pin sits further in, so its wire arrives 5 px above the odd pin's wire.
+# Pin 46 is left out: it is OC5A, the output of Timer5, used by the fourth buzzer.
 _row_pins = []
 for k in range(15, -1, -1):
     _row_pins += [str(22 + 2 * k), str(23 + 2 * k)]
-_row_pins = [p for p in _row_pins if int(p) < 22 + TOTAL_ROWS]
+_used = sorted([p for p in _row_pins if p != '46'], key=int)[:TOTAL_ROWS]
+_row_pins = [p for p in _row_pins if p in _used]
 ROW_PIN_OF_PHYS = _row_pins                          # physical row i (top to bottom) -> pin
 ROW_PINS = [None] * TOTAL_ROWS
 for i, row in enumerate(PHYS_ROWS):
@@ -141,8 +143,8 @@ for i, row in enumerate(PHYS_ROWS):
 COL_PINS = ['A%d' % x for x in range(SCREEN_W)]      # column x -> Ax (PORTF / PORTK bit order)
 KEY_ROW_PINS = ['18', '19', '20', '21']
 KEY_COL_PINS = ['17', '16', '15', '14']
-BUZZER_PINS = ['5', '6', '11']                        # OC3A, OC4A, OC1A
-BUZZER_TIMERS = ['Timer3 OC3A', 'Timer4 OC4A', 'Timer1 OC1A']
+BUZZER_PINS = ['5', '6', '11', '46']                  # OC3A, OC4A, OC1A, OC5A
+BUZZER_TIMERS = ['Timer3 OC3A', 'Timer4 OC4A', 'Timer1 OC1A', 'Timer5 OC5A']
 
 # ============================================================== diagram building
 
@@ -264,21 +266,31 @@ for lane, _, key, src, pin, (sx_, sy_), first, colour in key_items:
     wire(src, 'mega:%s' % pin, colour, [first, mv('v', turn[key] - sy_), '*', mv('v', turn[key] - py)], 'bus')
 
 buz_items = []
-for i in range(3):
+for i in range(len(BUZZER_PINS)):
     bx = BX + BPX * i
-    part('wokwi-buzzer', 'bz%d' % (i + 1), bx, BY, {'volume': '0.6'}, 180)
-    p2 = rot(*BUZ_PINS['2'], BUZ_W, BUZ_H, 180)
+    on_side = int(BUZZER_PINS[i]) >= 22               # its wire goes up beside the board:
+    turned = 0 if on_side else 180                    # not turned, so its signal leg is on the right
+    part('wokwi-buzzer', 'bz%d' % (i + 1), bx, BY, {'volume': '0.6'}, turned)
+    p2 = rot(*BUZ_PINS['2'], BUZ_W, BUZ_H, turned)
     buz_items.append((bx + p2[0], mega_pin(BUZZER_PINS[i])[0], 'b%d' % i, 'bz%d:2' % (i + 1),
                       BUZZER_PINS[i], (bx + p2[0], BY + p2[1]), WIRE['buzzer']))
-    if i < 2:                          # ground from buzzer to buzzer (hidden)
+    if i < len(BUZZER_PINS) - 1:       # ground from buzzer to buzzer (hidden)
         wire('bz%d:1' % (i + 1), 'bz%d:1' % (i + 2), '', [], 'hidden')
-p1 = rot(*BUZ_PINS['1'], BUZ_W, BUZ_H, 180)
-buz_items.append((BX + 2 * BPX + p1[0], mega_pin('GND.1')[0], 'gnd', 'bz3:1', 'GND.1',
-                  (BX + 2 * BPX + p1[0], BY + p1[1]), WIRE['gnd']))
-turn = fan_heights([(i[0], i[1], i[2]) for i in buz_items], buz_top, LANE)
-for lane, _, key, src, pin, (sx_, sy_), colour in buz_items:
+p1 = rot(*BUZ_PINS['1'], BUZ_W, BUZ_H, turned)
+last = len(BUZZER_PINS) - 1
+buz_items.append((BX + last * BPX + p1[0], mega_pin('GND.1')[0], 'gnd', 'bz%d:1' % (last + 1), 'GND.1',
+                  (BX + last * BPX + p1[0], BY + p1[1]), WIRE['gnd']))
+# A buzzer on the double header (pin 46, the rightmost buzzer) goes straight up beside the
+# board and across it at its pin's height; the others fan into the lower header.
+side = [i for i in buz_items if i[4].isdigit() and int(i[4]) >= 22]
+fan = [i for i in buz_items if i not in side]
+turn = fan_heights([(i[0], i[1], i[2]) for i in fan], buz_top, LANE)
+for lane, _, key, src, pin, (sx_, sy_), colour in fan:
     _, py = mega_pin(pin)
     wire(src, 'mega:%s' % pin, colour, [mv('v', turn[key] - sy_), '*', mv('v', turn[key] - py)], 'bus')
+for lane, _, key, src, pin, (sx_, sy_), colour in side:
+    _, py = mega_pin(pin)
+    wire(src, 'mega:%s' % pin, colour, [mv('v', py - sy_)], 'bus')
 
 # ============================================================== geometry helpers for checks
 
@@ -351,7 +363,7 @@ def check_nets():
             pid = 'btn_%s' % BUTTONS[r][c][0]
             if mega_of.get(pid + ':1.l') != KEY_ROW_PINS[r] or mega_of.get(pid + ':2.l') != KEY_COL_PINS[c]:
                 errors += 1
-    for i in range(3):
+    for i in range(len(BUZZER_PINS)):
         if mega_of.get('bz%d:2' % (i + 1)) != BUZZER_PINS[i] or mega_of.get('bz%d:1' % (i + 1)) != 'GND.1':
             errors += 1
     return errors
@@ -429,7 +441,7 @@ const char KEY_NAMES[KEY_ROWS][KEY_COLS] = {{
 }};
 
 // ---- buzzers, each on the "A" output of its own 16-bit timer
-const uint8_t BUZZER_COUNT = 3;
+const uint8_t BUZZER_COUNT = {len(BUZZER_PINS)};
 const uint8_t BUZZER_PINS[BUZZER_COUNT] = {{ {arr(BUZZER_PINS)} }};   // {', '.join(BUZZER_TIMERS)}
 """
     path.write_text(text, encoding='utf-8', newline='\n')

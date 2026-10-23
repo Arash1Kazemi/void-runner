@@ -5,7 +5,7 @@
  *   - 16 x 24 game screen + 3 status bars, 432 single LEDs in one row/column matrix
  *   - 4 x 4 keypad of single push buttons (W A S D move, R fire / OK, Q back,
  *     P pause, M sound on/off, B brightness)
- *   - 3 buzzers, one hardware timer each, so music can have three voices
+ *   - 4 buzzers, one hardware timer each: lead, bass, effects, rhythm guitar
  *
  * Code tabs:
  *   config.h   settings              display.h  LED screen, drawing, text

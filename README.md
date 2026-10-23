@@ -1,7 +1,8 @@
 # VOID RUNNER
 
 A vertical space shooter for the Arduino Mega: a 16 × 24 screen of single LEDs plus three
-status bars, a 4 × 4 keypad of push buttons and three buzzers. Three phases, three bosses,
+status bars, a 4 × 4 keypad of push buttons and four buzzers (lead, bass, rhythm guitar,
+sound effects). Three phases, three bosses,
 three ships. Design and rules: [docs/SPEC.md](docs/SPEC.md). Pictures and animations of the
 real screens: [docs/media/](docs/media/).
 
@@ -74,6 +75,8 @@ Serial test commands (type them in the Wokwi terminal, always with `!`): `!d` sc
 
 - `tools/gen_circuit.py` – generates `diagram.json` and `void_runner/pins.h`
 - `tools/gen_font.py` – generates `void_runner/font.h` from ASCII-art letters
+- `tools/compose_music.py` – the in-game songs in a short note notation; writes them into
+  `void_runner/tunes.h` (listen to them: `docs/media/music/`)
 - `tools/render_dumps.py` – turns screen dumps into a PNG or an animated GIF
 - `tools/media_record.script` – PC-harness script that records the clips in `docs/media/`
 - `tools/led_style_preview.html` – compares LED colour styles with Wokwi's real LED part

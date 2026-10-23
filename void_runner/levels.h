@@ -78,9 +78,9 @@ const char NAME_MIST[] PROGMEM = "MIST";
 const char NAME_THE[] PROGMEM = "THE";
 const char NAME_VOID[] PROGMEM = "VOID";
 const PhaseInfo PHASES[3] = {
-  {PHASE1, sizeof(PHASE1) / sizeof(Spawn), 4, NAME_ROCK, NAME_BELT, SONG_PHASE1, 125, BOSS_KIND_WARDEN},
-  {PHASE2, sizeof(PHASE2) / sizeof(Spawn), 5, NAME_DEEP, NAME_MIST, SONG_PHASE2, 150, BOSS_KIND_HUNTER},
-  {PHASE3, sizeof(PHASE3) / sizeof(Spawn), 6, NAME_THE, NAME_VOID, SONG_PHASE3, 100, BOSS_KIND_KING},
+  {PHASE1, sizeof(PHASE1) / sizeof(Spawn), 4, NAME_ROCK, NAME_BELT, SONG_PHASE1, SONG_PHASE1_TICK_MS, BOSS_KIND_WARDEN},
+  {PHASE2, sizeof(PHASE2) / sizeof(Spawn), 5, NAME_DEEP, NAME_MIST, SONG_PHASE2, SONG_PHASE2_TICK_MS, BOSS_KIND_HUNTER},
+  {PHASE3, sizeof(PHASE3) / sizeof(Spawn), 6, NAME_THE, NAME_VOID, SONG_PHASE3, SONG_PHASE3_TICK_MS, BOSS_KIND_KING},
 };
 
 // Copies entry i of a phase's spawn list from flash into RAM.

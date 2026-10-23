@@ -15,7 +15,7 @@ const uint8_t TOTAL_ROWS  = SCREEN_H + STATUS_ROWS;
 // Anode pin of every LED row: rows 0-23 = game screen top to bottom,
 // rows 24-26 = status bars top to bottom (all on the double header).
 const uint8_t ROW_PINS[TOTAL_ROWS] = {
-  44, 45, 42, 43, 40, 41, 38, 39, 36, 37, 34, 35, 32, 33, 30, 31, 28, 29, 26, 27, 24, 25, 22, 23, 48, 46, 47
+  44, 45, 42, 43, 40, 41, 38, 39, 36, 37, 34, 35, 32, 33, 30, 31, 28, 29, 26, 27, 24, 25, 22, 23, 48, 49, 47
 };
 
 // Cathode pin of every LED column, left to right: column x is wired to Ax,
@@ -36,5 +36,5 @@ const char KEY_NAMES[KEY_ROWS][KEY_COLS] = {
 };
 
 // ---- buzzers, each on the "A" output of its own 16-bit timer
-const uint8_t BUZZER_COUNT = 3;
-const uint8_t BUZZER_PINS[BUZZER_COUNT] = { 5, 6, 11 };   // Timer3 OC3A, Timer4 OC4A, Timer1 OC1A
+const uint8_t BUZZER_COUNT = 4;
+const uint8_t BUZZER_PINS[BUZZER_COUNT] = { 5, 6, 11, 46 };   // Timer3 OC3A, Timer4 OC4A, Timer1 OC1A, Timer5 OC5A
