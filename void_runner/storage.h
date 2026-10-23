@@ -17,6 +17,7 @@ struct Settings {
   uint8_t ship;                          // chosen in the hangar
   uint16_t best;                         // high score
   uint8_t bestPhase;                     // phase reached with the high score (4 = won)
+  uint8_t bestDifficulty;                // difficulty the high score was made on
 };
 Settings settings;
 const uint8_t EE_MAGIC = 0xA7;           // marks an EEPROM that holds our settings
@@ -50,7 +51,7 @@ void settingsSave() {
 // Loads the settings at start-up. If the EEPROM holds none (new chip, new simulation) or
 // a value is out of range, the defaults are used.
 void settingsLoad() {
-  settings = {0, 0, DIFF_NORMAL, 0, 0, 0};
+  settings = {0, 0, DIFF_NORMAL, 0, 0, 0, DIFF_EASY};
   if (eepromRead(0) == EE_MAGIC) {
     uint8_t* p = (uint8_t*)&settings;
     for (uint8_t i = 0; i < sizeof(Settings); i++) p[i] = eepromRead(1 + i);
@@ -58,5 +59,6 @@ void settingsLoad() {
   if (settings.brightness >= sizeof(BRIGHTNESS_LEVELS)) settings.brightness = 0;
   if (settings.difficulty > DIFF_HARD) settings.difficulty = DIFF_NORMAL;
   if (settings.ship > 2) settings.ship = 0;
+  if (settings.bestDifficulty > DIFF_HARD) settings.bestDifficulty = DIFF_EASY;
   settings.muted = settings.muted ? 1 : 0;
 }

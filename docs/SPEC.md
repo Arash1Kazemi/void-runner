@@ -87,7 +87,7 @@ Menu   ── PLAY · SHIP · OPTS · BEST   (W/S choose, R open, Q back to the 
         │                  show its speed / ammo / fire power; R = take it, Q = back
         ├─ OPTS: LITE (brightness) · SND (sound) · DIFF (EASY / NORM / HARD) · TEST (LED test)
         │        W/S item, A/D or R change, page dots at the bottom; saved in EEPROM
-        └─ BEST: high score and how far it got (ZONE 1–3, or WIN)
+        └─ BEST: high score, then how far it got (ZONE 1–3, or WIN) and its difficulty
 PLAY → Phase 1 → Boss 1 → Phase 2 → Boss 2 → Phase 3 → Boss 3 → VICTORY (fireworks)
 Pause (P or Q): score, a big pause sign, pages "P:GO" / "Q:EX"
 GAME OVER: score (blinks for a new record), best score; R or Q → menu
@@ -105,7 +105,7 @@ LED TEST: all LEDs, row sweep, column sweep, checkerboard, with rising beeps
 | Explosions | Only the bosses and the player's ship explode into flying pixels. Enemies, rocks and mines just vanish (with a boom), and a hit enemy disappears for 120 ms – flying debris on 16 × 24 LEDs looked like bullets. No background stars in the game for the same reason. |
 | Pickups | Ammo crate (box) and extra life (blinking plus). Cruisers drop a life; other enemies sometimes drop ammo. |
 | Bosses | One per phase; health on the red status bar (it drops with every hit); they blink before the HUNTER's dive, at the VOID KING's change and while burning; their bullets and helpers vanish when they die. |
-| Score | Drone 10, weaver 15, miner 20, cruiser 40, rocks 5/10, mine 2, pickup 5, bosses 200/300/500, phase bonus 100 × phase. High score + phase in EEPROM. |
+| Score | Drone 10, weaver 15, miner 20, cruiser 40, rocks 5/10, mine 2, pickup 5, bosses 200/300/500, phase bonus 100 × phase. High score + zone reached + difficulty in EEPROM. A higher score takes the record; an equal score only on a harder difficulty. |
 
 **Difficulty** (OPTS → DIFF): EASY = 4 lives, enemies fire 1.5× slower, bosses 80 % health,
 crates +20. NORMAL = 3 lives, 100 %, +15. HARD = 3 lives, enemies fire 1.33× faster, bosses

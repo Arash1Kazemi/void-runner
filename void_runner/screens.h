@@ -167,7 +167,8 @@ Screen optionsFrame(uint16_t frameNo) {
 }
 
 // ================================================================= best score
-// One picture of the BEST page: the high score and how far it got (ZONE 1-3, or WIN).
+// One picture of the BEST page: the high score, then (bottom line, changing every 1.2 s)
+// how far it got - "ZONE" and 1-3, or "WIN" - and the difficulty it was made on.
 Screen bestFrame(uint16_t frameNo) {
   if (keyPressed(KEY_BACK) || keyPressed(KEY_FIRE)) return SCR_MENU;
   clearScreen();
@@ -175,11 +176,13 @@ Screen bestFrame(uint16_t frameNo) {
   drawTextCentered(0, PSTR("BEST"), false);
   if (settings.best) drawNumberCentered(9, settings.best, false);
   else drawTextCentered(9, PSTR("---"), false);
-  if (settings.bestPhase >= 4) {
-    drawTextCentered(18, PSTR("WIN"), false);
-  } else if (settings.bestPhase) {       // the zone it reached: "ZONE", then "2"
-    if ((frameNo / 60) % 2) drawNumberCentered(18, settings.bestPhase, false);
-    else drawTextCentered(18, PSTR("ZONE"), false);
+  if (settings.bestPhase) {
+    bool won = settings.bestPhase >= 4;
+    uint8_t page = (frameNo / 60) % (won ? 2 : 3);   // WIN, NORM  or  ZONE, 2, NORM
+    if (page == (won ? 1 : 2)) drawTextCentered(18, DIFF_NAMES[settings.bestDifficulty], false);
+    else if (won) drawTextCentered(18, PSTR("WIN"), false);
+    else if (page == 0) drawTextCentered(18, PSTR("ZONE"), false);
+    else drawNumberCentered(18, settings.bestPhase, false);
   }
   if (settings.best && (frameNo & 8)) {  // a little sparkle
     setPixel(1, 7, true);
@@ -206,13 +209,17 @@ void pauseDraw(uint32_t t, uint16_t frameNo) {
 // ================================================================= game over and victory
 bool newBest = false;
 
-// Saves the score as the new best (with the phase reached; 4 = won) if it beats the old
-// one.
+// Saves the score as the new best (with the phase reached, 4 = won, and the difficulty)
+// if it beats the old one. The score counts first; the same score on a harder difficulty
+// also takes the record.
 void recordScore(uint8_t phaseReached) {
-  newBest = player.score > settings.best;
+  newBest = player.score > settings.best ||
+            (player.score == settings.best && player.score > 0 &&
+             settings.difficulty > settings.bestDifficulty);
   if (!newBest) return;
   settings.best = player.score;
   settings.bestPhase = phaseReached;
+  settings.bestDifficulty = settings.difficulty;
   settingsSave();
   Serial.println(F("[VR] new best"));
 }
