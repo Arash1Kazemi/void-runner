@@ -166,10 +166,16 @@ The status bars fill during the logo like a start-up progress bar.
 - In-game music: original metal tracks, written in a short notation in
   `tools/compose_music.py` (which writes the note lists into `tunes.h`; all voices of a song
   have the same length so the loop stays in time). Listen: `docs/media/music/*.wav`.
-  - ROCK BELT: thrash, E minor, galloping bass, about 190 BPM (loop 10.2 s)
-  - DEEP MIST: slow, heavy drop-D chugs, D minor (loop 12.8 s)
-  - THE VOID: syncopated groove with a catchy lead, E minor (loop 9.6 s)
-  - Boss: tremolo-picked bass, chromatic lead (loop 4.5 s)
+  Every song: buzzer 1 = lead guitar, buzzer 2 = bass, buzzer 4 = rhythm guitar a fifth above
+  the bass (bass + rhythm = a power chord); 1 tick = a 16th note; seamless loop.
+
+| Song | Style | Bass + rhythm guitar | Lead guitar |
+|---|---|---|---|
+| **ROCK BELT** (phase 1, flying through the asteroids) | fast thrash, E minor, about 190 BPM, 8 bars, loop 10.2 s | the **gallop** (8th + two 16ths) on low E; bars 2 and 6 climb E → G → A, bar 4 hits the tritone B♭ then A, bar 7 C → B, bar 8 holds B, which pulls back to E | question-and-answer melody: E-G-A-B up and back down, the same reaching higher, a chromatic slide B♭-A-G-F♯, the answer an octave up, a fast run in bar 7, held F♯ → B into the next loop |
+| **DEEP MIST** (phase 2, lost in a dark nebula) | slow and heavy, drop-D, D minor, half-time feel, 8 bars, loop 12.8 s | short muted **chugs** on low D with gaps (the silence makes it heavy); every second bar slides down A → G♯ → G; the last bar B♭ → A, a dark half-step | sparse and spooky: long notes with rests like shapes in fog (A-F, E, D …), building to D-C-A-F in bar 5, then sinking F-E-D-C♯ to rest on D |
+| **THE VOID** (phase 3, the final fight) | syncopated modern groove, E minor, 8 bars, loop 9.6 s | off-beat **stabs** (hit-pause-hit-hit) and a short fill (G-E-B♭-A or C-B), three times; bar 7 straight 8ths, bar 8 16ths as a build-up into the loop | a **hook** to hum: B-B-G, then A-E / C-B like a chanted chorus; rises F♯-G-A-B, jumps an octave (peak on high G), runs down the E-minor chord twice, a fast scale up to a held high E |
+| **Boss** (all three boss fights) | tremolo picking, chromatic, about 210 BPM, 4 bars, loop 4.5 s (repeats intensely) | nonstop 16ths: a bar on E, a bar on F (half-step up, the "menace" move), then E → G → B♭ (tritone) and B♭ → A | a **wailing** figure circling a note (E-F-E-D♯, hold), moved up step by step to a peak on B♭, then a slow chromatic fall B♭-A-A♭-G into the loop |
+
 - Other music: start-up melody (logo, synced to the picture), phase fanfare, phase clear,
   victory, game over.
 - Effects on buzzer 3, with priorities so an important sound is never cut by a small one:
