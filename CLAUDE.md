@@ -87,8 +87,12 @@ Keys: W A S D move, R fire/OK, Q back, P pause, M mute (global), B brightness (g
   only for bosses and the player's ship; no background stars in the game.
 - Balance (found with the autopilot): slow enemies pile up, so each phase caps enemies on
   screen (4/5/6); enemies only shoot from rows 0–9 (point-blank shots were undodgeable).
-  With a 250 ms-reaction bot: EASY 11/12, NORMAL 7/12, HARD 4/12 wins. Re-run after tuning.
-- Sizes: 32.6 KB flash, 2.0 KB RAM. CPU time per picture on the AVR is not measured yet
+  With a 250 ms-reaction bot, 48 games per level: EASY 43/48, NORMAL 26/48, HARD 8/48 wins
+  (12 games were too noisy). Re-run after tuning.
+- Rocks are hollow (small 3 × 3, big 4 × 4, user feedback 2026-10-24: solid blocks were not
+  recognisable); contact with enemies counts only when lit pixels touch (`enemyTouchesShip`).
+  Bigger rocks made the game harder, so they fall slower (360 / 560 ms per row), big = 2 hits.
+- Sizes: 32.8 KB flash, 2.0 KB RAM. CPU time per picture on the AVR is not measured yet
   (Wokwi quota ran out) – `!s` prints `frame work us=`.
 
 ## Build, run, test

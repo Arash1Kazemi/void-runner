@@ -57,7 +57,7 @@ python tests/host/run_tests.py
 ```
 
 Builds the real game code for the PC (MSYS2 `g++`) and runs `tests/host/*.txt`: the key
-rules, every screen, and a whole game. `--balance` also lets the autopilot play 12 games per
+rules, every screen, and a whole game. `--balance` also lets the autopilot play 48 games per
 difficulty without the shield. No Wokwi minutes needed.
 
 Wokwi scenarios (use the free plan's CLI minutes): `tests/scenarios/stage1_check.yaml`
@@ -82,6 +82,8 @@ Serial test commands (type them in the Wokwi terminal, always with `!`): `!d` sc
 - `tools/media_record.script` – PC-harness script that records the clips in `docs/media/`
 - `tools/led_style_preview.html` – compares LED colour styles with Wokwi's real LED part
 - `tools/led_brightness_preview.html` – how bright a lit LED looks for different `gamma` values
+- `tools/rock_preview.html` – the old solid rocks vs. tumbling vs. hollow rocks, in a live scene
+  with Wokwi's real LEDs (served like the text preview below)
 - `tools/text_preview.html` – live comparison of scrolling text vs. still pages, the way Wokwi
   shows them (serve the project folder, e.g. `python -m http.server`, then open
   `/tools/text_preview.html`)

@@ -134,8 +134,8 @@ const EnemyInfo ENEMY_INFO[6] = {
   {ENEMY_WEAVER, 3, 2, 1, 15, 600},
   {ENEMY_MINER, 3, 2, 2, 20, 280},
   {ENEMY_CRUISER, 5, 3, 5, 40, 500},
-  {ROCK_SMALL, 2, 2, 1, 5, 260},
-  {ROCK_BIG, 3, 3, 3, 10, 420},
+  {ROCK_SMALL, 3, 3, 1, 5, 360},
+  {ROCK_BIG, 4, 4, 2, 10, 560},
 };
 struct Enemy {
   int8_t x, y, dir;

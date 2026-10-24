@@ -93,8 +93,9 @@ void destroyEnemy(Enemy& e, bool byPlayer) {
   e.alive = false;                       // it just vanishes: flying debris only for the
   soundSfx(SFX(SFX_BOOM), 3);            // boss and the player's ship (easier to read)
   if (type == EN_ROCK_B) {               // a big rock breaks into two small ones
-    Enemy* a = spawnEnemy(EN_ROCK_S, constrain(x - 1, 0, SCREEN_W - 2), y);
-    Enemy* b = spawnEnemy(EN_ROCK_S, constrain(x + 2, 0, SCREEN_W - 2), y);
+    const int8_t maxX = SCREEN_W - ENEMY_INFO[EN_ROCK_S].w;
+    Enemy* a = spawnEnemy(EN_ROCK_S, constrain(x - 1, 0, maxX), y);
+    Enemy* b = spawnEnemy(EN_ROCK_S, constrain(x + 2, 0, maxX), y);
     if (a) a->dir = -1;
     if (b) b->dir = 1;
   }
@@ -175,12 +176,25 @@ void shotsStep() {
   }
 }
 
+// True when a lit pixel of the enemy or rock lies on a lit pixel of the ship, so the empty
+// corners of a hollow rock (or between a drone's wings) don't count as a crash.
+bool enemyTouchesShip(const Enemy& e) {
+  const EnemyInfo& info = infoOf(e);
+  if (!boxesTouch(e.x, e.y, info.w, info.h, player.x, player.y, 3, 3)) return false;
+  for (uint8_t r = 0; r < info.h; r++) {
+    uint16_t bits = pgm_read_word(info.sprite + r);
+    for (uint8_t c = 0; c < info.w; c++)
+      if ((bits & (0x8000u >> c)) && shipPixel(e.x + c, e.y + r)) return true;
+  }
+  return false;
+}
+
 // Flying into an enemy, a rock or the boss also costs a life.
 void contactsStep() {
   if (playerShielded() || player.lives == 0) return;
   for (uint8_t i = 0; i < MAX_ENEMIES; i++) {
     Enemy& e = enemies[i];
-    if (e.alive && boxesTouch(e.x, e.y, infoOf(e).w, infoOf(e).h, player.x, player.y, 3, 3)) {
+    if (e.alive && enemyTouchesShip(e)) {
       bool rock = e.type >= EN_ROCK_S;
       destroyEnemy(e, false);
       playerHit(rock ? F("rock") : F("enemy"));

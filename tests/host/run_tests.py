@@ -62,7 +62,7 @@ def run_tests():
 
 # Autopilot games without the shield. The autopilot here "thinks" only every 250 ms,
 # a rough stand-in for a human's reaction time, so the result says how hard each level is.
-def balance(seeds=12, react_ms=250):
+def balance(seeds=48, react_ms=250):
     exe = build('sim_balance', ['AUTOPILOT_REACT_MS=%d' % react_ms])
     for level, key in (('EASY', 'tap A'), ('NORMAL', ''), ('HARD', 'tap D')):
         wins, bosses = 0, []

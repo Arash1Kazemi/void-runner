@@ -46,14 +46,17 @@ const uint16_t ENEMY_CRUISER[3] PROGMEM = {    // cruiser: tough, aims at you
   0b1101100000000000,                          //  ##.##
   0b1010100000000000,                          //  #.#.#
 };
-const uint16_t ROCK_SMALL[2] PROGMEM = {
-  0b1100000000000000,                          //  ##
-  0b1100000000000000,                          //  ##
-};
-const uint16_t ROCK_BIG[3] PROGMEM = {         // breaks into two small rocks
-  0b0110000000000000,                          //  .##
-  0b1110000000000000,                          //  ###
+// Rocks are hollow and lumpy (a crater in the middle), so they don't look like any ship.
+const uint16_t ROCK_SMALL[3] PROGMEM = {
   0b1100000000000000,                          //  ##.
+  0b1010000000000000,                          //  #.#
+  0b0110000000000000,                          //  .##
+};
+const uint16_t ROCK_BIG[4] PROGMEM = {         // breaks into two small rocks
+  0b0110000000000000,                          //  .##.
+  0b1001000000000000,                          //  #..#
+  0b1011000000000000,                          //  #.##
+  0b0110000000000000,                          //  .##.
 };
 
 // ================================================================= pickups (blinking)

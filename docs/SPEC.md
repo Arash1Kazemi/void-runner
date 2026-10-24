@@ -104,7 +104,7 @@ LED TEST: all LEDs, row sweep, column sweep, checkerboard, with rising beeps
 | Lives | EASY 4, NORMAL 3, HARD 3 (max 4). Hit → explosion, screen shake, 2 s blinking shield. +1 life after each phase; extra-life pickups. |
 | Ammo | Per ship (60 / 40 / 80). Every phase starts full. Ammo crates fall from the top: fly into them (+20 / 15 / 12 by difficulty). At 5 or less: warning beep and the yellow bar blinks; a crate is always sent then. Empty → dry click. |
 | Enemies | All slow; at most 4 / 5 / 6 on the screen at once (phase 1 / 2 / 3), so the 16 × 24 screen stays readable. They shoot only from rows 0–9, so no bullet starts right next to the ship. |
-| Space rocks | Fall and drift sideways; a big rock takes 3 hits and breaks into 2 small ones. Hurt on contact. |
+| Space rocks | Hollow, lumpy shapes with a crater in the middle (small 3 × 3, big 4 × 4), so they look like no ship. Fall slowly and drift sideways; a big rock takes 2 hits and breaks into 2 small ones. Hurt on contact. |
 | Explosions | Only the bosses and the player's ship explode into flying pixels. Enemies, rocks and mines just vanish (with a boom), and a hit enemy disappears for 120 ms – flying debris on 16 × 24 LEDs looked like bullets. No background stars in the game for the same reason. |
 | Pickups | Ammo crate (box) and extra life (blinking plus). Cruisers drop a life; other enemies sometimes drop ammo. |
 | Bosses | One per phase; health on the red status bar (it drops with every hit); they blink before the HUNTER's dive, at the VOID KING's change and while burning; their bullets and helpers vanish when they die. |
@@ -194,7 +194,7 @@ The status bars fill during the logo like a start-up progress bar.
   LED lit.
 - **Nothing blocks:** no `delay()` in the game; a picture every 20 ms, each part does one
   small step. The game has its own clock that stops while paused.
-- **Memory:** fixed-size arrays only (no `malloc`). 32.6 KB of 248 KB flash, 2.0 KB of 8 KB
+- **Memory:** fixed-size arrays only (no `malloc`). 32.8 KB of 248 KB flash, 2.0 KB of 8 KB
   RAM. Fonts, art, music and spawn lists are in flash.
 - **Fairness:** at most 4–6 enemies at once; enemies don't shoot from close range; a crate
   always comes when ammo runs low; every phase is checked to be winnable (section 10).
@@ -208,7 +208,7 @@ The status bars fill during the logo like a start-up progress bar.
 | Controls | `tests/host/controls.txt` – tap, glide, row limit, single shot, auto-fire rate, move-cancels-fire, no glide while firing | pass |
 | Every screen | `tests/host/screens.txt` – logo skip, title, menu, hangar, options, LED test, best, pause, game over + new record, global keys, power cycle (EEPROM), demo | pass |
 | Whole game | `tests/host/playthrough.txt` – all phases, bosses, Void King form 2, victory | pass |
-| Balance | `run_tests.py --balance`: autopilot without shield, reacting only every 250 ms (roughly a human), 12 games per level | EASY 11/12 won, NORMAL 7/12, HARD 4/12 |
+| Balance | `run_tests.py --balance`: autopilot without shield, reacting only every 250 ms (roughly a human), 48 games per level (12 were too few: results jumped by ± 3) | EASY 43/48 won, NORMAL 26/48, HARD 8/48 |
 
 The `tests/host` tests compile the real game code on the PC with a stand-in for Arduino
 (`tests/host/Arduino.h`) and run a whole game in well under a second – no Wokwi minutes.

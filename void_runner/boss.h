@@ -63,8 +63,8 @@ void updateWarden() {
     boss.nextShot = gameMs + fireDelay(bossAngry() ? 1000 : 1600);
   }
   if (gameMs >= boss.nextAction) {     // drops rocks
-    spawnFromTable(EN_ROCK_S, random(SCREEN_W - 2));
-    if (bossAngry()) spawnFromTable(EN_ROCK_S, random(SCREEN_W - 2));
+    spawnFromTable(EN_ROCK_S, random(SCREEN_W - 3));
+    if (bossAngry()) spawnFromTable(EN_ROCK_S, random(SCREEN_W - 3));
     boss.nextAction = gameMs + 5000;
   }
 }
@@ -165,7 +165,7 @@ void updateKing() {
       if (drones < 2) spawnFromTable(EN_DRONE, random(SCREEN_W - 3));
       boss.nextAction = gameMs + 6000;
     } else {                                     // rock rain
-      spawnFromTable(EN_ROCK_S, random(SCREEN_W - 2));
+      spawnFromTable(EN_ROCK_S, random(SCREEN_W - 3));
       boss.nextAction = gameMs + 1200;
     }
   }
