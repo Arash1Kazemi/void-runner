@@ -30,8 +30,9 @@ void spawnFromTable(uint8_t type, int8_t x) {
 void updateEnemy(Enemy& e) {
   const EnemyInfo& info = infoOf(e);
   // Enemies only shoot from the upper part of the screen: a bullet fired right next to
-  // the ship could not be dodged.
-  bool canShoot = e.y >= 0 && e.y <= ENEMY_FIRE_MAX_Y;
+  // the ship could not be dodged. The ship may fly up to row 9 too, so a bullet must also
+  // start at least 3 rows above it.
+  bool canShoot = e.y >= 0 && e.y <= ENEMY_FIRE_MAX_Y && e.y + info.h + 3 <= player.y;
   switch (e.type) {
     case EN_DRONE:
       if (gameMs >= e.nextMove) { e.y++; e.nextMove += info.stepMs; }
