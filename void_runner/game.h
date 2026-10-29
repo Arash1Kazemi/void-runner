@@ -7,7 +7,8 @@
  *   WARNING    "WARN" and a blinking warning sign, a siren, the red bar charges up
  *   BOSS       boss fight with its own music; the red bar shows the boss's health
  *   BOSS_DOWN  the boss blows up, the screen shakes
- *   CLEAR      bonus points and one extra life, then the next phase (or victory)
+ *   CLEAR      bonus points and one extra life, then the next phase (after the last
+ *              boss the game goes straight to the victory screen)
  * and DEAD when the last life is lost.
  *
  * Status bars: red = phase progress / boss health, yellow = ammo (blinks when low),
@@ -346,7 +347,13 @@ GameResult stageStep() {
         shake(20);
         soundSfx(SFX(SFX_BIG_BOOM), 5);
       }
-      if (stageTime() >= BOSS_DOWN_MS) phaseClear();
+      if (stageTime() >= BOSS_DOWN_MS) {
+        if (game.phase == 2) {                        // last boss: bonus, then straight to
+          addScore(PHASE_BONUS * 3);                  // the victory screen (no ZONE DONE,
+          return GAME_WON;                            // no extra life)
+        }
+        phaseClear();
+      }
       break;
     case GS_CLEAR:
       if (stageTime() >= CLEAR_MS) {
@@ -471,7 +478,7 @@ void drawGame(uint16_t frameNo) {
     if (s.kind == SHOT_PLAYER) {         // player bullet: a short streak
       setPixel(s.x, s.y, true);
       setPixel(s.x, s.y + 1, true);
-    } else if (s.kind == SHOT_ENEMY || (frameNo & 8)) {    // mines blink
+    } else {                             // enemy bullet or mine: one steady pixel
       setPixel(s.x, s.y, true);
     }
   }

@@ -119,12 +119,12 @@ crates +20. NORMAL = 3 lives, 100 %, +15. HARD = 3 lives, enemies fire 1.33× fa
 Each phase: pages "ZONE" + big phase number, the phase name, "GO!" with a fanfare → waves
 from a spawn list (`levels.h`) → "WARN" + a blinking warning sign + siren while the red bar
 charges → boss with its own music → boss explodes → pages "ZONE DONE", bonus "PTS",
-"LIFE UP". Victory: fireworks + pages "YOU WIN!", "VOID SAFE", score.
+"LIFE UP" (not after the last boss: the victory comes straight away). Victory: fireworks + pages "YOU WIN!", "VOID SAFE", score.
 
 | Phase | Enemies | Boss |
 |---|---|---|
 | 1 – ROCK BELT (asteroids) | Drone (sinks, shoots straight down), many rocks | **WARDEN** – wide (10 × 4), slides along the top, 3-way spread, drops rocks; below half health faster with a 5-way spread |
-| 2 – DEEP MIST (a nebula) | Weaver (zig-zags), Mine-layer (crosses the top, drops blinking mines that can be shot), drones | **HUNTER** – small and FAST: dashes to a new spot, fires an aimed pair; every 7 s blinks and dives at the player |
+| 2 – DEEP MIST (a nebula) | Weaver (zig-zags), Mine-layer (crosses the top, drops mines that can be shot), drones | **HUNTER** – small and FAST: dashes to a new spot, fires an aimed pair; every 7 s blinks and dives at the player |
 | 3 – The Void | Cruiser (5 hits, stops near the top, aimed shots), everything else, rock showers | **VOID KING** – huge (12 × 5), 5-way spread, calls in drones; at half health the eye opens (roar, shake): aimed triple volleys and rock rain |
 
 Boss health: WARDEN 24, HUNTER 22, VOID KING 40 (× difficulty).

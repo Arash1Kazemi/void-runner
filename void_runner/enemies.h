@@ -3,7 +3,7 @@
  * player is always faster); each type has its own shot:
  *   drone     sinks, shoots straight down
  *   weaver    sinks while zig-zagging, shoots straight down now and then
- *   miner     crosses the top of the screen and drops blinking mines
+ *   miner     crosses the top of the screen and drops mines
  *   cruiser   stops near the top, slides sideways and fires shots aimed at the player
  *   rocks     fall and drift; a big rock breaks into two small ones
  */
