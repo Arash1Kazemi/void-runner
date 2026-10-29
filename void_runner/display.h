@@ -96,12 +96,6 @@ void setPixel(int16_t x, int16_t y, bool on) {
   else frame[y] &= ~(1u << x);
 }
 
-// True if an LED of the game screen is on in `frame`.
-bool getPixel(int16_t x, int16_t y) {
-  if (x < 0 || x >= SCREEN_W || y < 0 || y >= SCREEN_H) return false;
-  return frame[y] & (1u << x);
-}
-
 // Turns a w x h block of LEDs on or off (bars, ribbons, clearing an area).
 void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, bool on) {
   for (int16_t j = y; j < y + h; j++)

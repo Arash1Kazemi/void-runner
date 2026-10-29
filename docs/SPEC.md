@@ -51,8 +51,7 @@ moving things stay sharp. Everything that blinks stays on/off for at least 160 m
 
 **Text:** never scrolls. Scrolling letters smeared into a white block in Wokwi (user test,
 22 Oct). Messages are still **pages** of short words (up to 4 small letters per line, 0.9 s
-each), with big digits and symbols where a word is not needed (`tools/text_preview.html`
-compares the styles).
+each), with big digits and symbols where a word is not needed.
 
 ## 2. Controls
 
@@ -238,8 +237,8 @@ project 1/
 ├─ diagram.json      the circuit (generated)
 ├─ wokwi.toml        Wokwi for VS Code → build/
 ├─ build.cmd         compiles the game into build/
-├─ tools/            circuit + font generators, screen renderer (PNG/GIF), LED style,
-│                    brightness and text previews
+├─ tools/            circuit + font generators, screen renderer (PNG/GIF), music,
+│                    wiring diagram
 ├─ docs/             this spec, media/ (rendered screens and animations)
-└─ tests/            stage0/, scenarios/ (Wokwi), host/ (PC tests)
+└─ tests/            scenarios/ (Wokwi), host/ (PC tests)
 ```

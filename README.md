@@ -9,10 +9,8 @@ real screens: [docs/media/](docs/media/).
 ## Run it in VS Code (Wokwi)
 
 1. Open this folder in VS Code.
-2. `F1` → **Wokwi: Select Config File** → choose the `wokwi.toml` in the project folder
-   (not the one in `tests/stage0`).
-3. `F1` → **Wokwi: Start Simulator** (the compiled program is in `build/`).
-4. **Click an empty spot of the circuit**, then use the keyboard (English layout):
+2. `F1` → **Wokwi: Start Simulator** (the compiled program is in `build/`).
+3. **Click an empty spot of the circuit**, then use the keyboard (English layout):
 
 | Key | Does |
 |---|---|
@@ -80,10 +78,3 @@ Serial test commands (type them in the Wokwi terminal, always with `!`): `!d` sc
   `void_runner/tunes.h` (listen to them: `docs/media/music/`)
 - `tools/render_dumps.py` – turns screen dumps into a PNG or an animated GIF
 - `tools/media_record.script` – PC-harness script that records the clips in `docs/media/`
-- `tools/led_style_preview.html` – compares LED colour styles with Wokwi's real LED part
-- `tools/led_brightness_preview.html` – how bright a lit LED looks for different `gamma` values
-- `tools/rock_preview.html` – the old solid rocks vs. tumbling vs. hollow rocks, in a live scene
-  with Wokwi's real LEDs (served like the text preview below)
-- `tools/text_preview.html` – live comparison of scrolling text vs. still pages, the way Wokwi
-  shows them (serve the project folder, e.g. `python -m http.server`, then open
-  `/tools/text_preview.html`)

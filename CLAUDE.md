@@ -123,8 +123,6 @@ Keys: W A S D move, R fire/OK, Q back, P pause, M mute (global), B brightness (g
   newlines) – use the Edit tool for C escapes and Windows paths; the path has a space
   (`Semesterr 7`).
 - Sound can be verified with a logic analyzer copy of the diagram + `--vcd-file`.
-- Two Wokwi configs exist: root `wokwi.toml` (the game) and `tests/stage0/wokwi.toml` (Stage 0
-  test). In VS Code the user must pick the root one (`F1` → Wokwi: Select Config File) and
-  click the circuit before using the keyboard (English layout).
+- In VS Code the user clicks the circuit before using the keyboard (English layout).
 - The user tests in VS Code; Wokwi's MCP server (`wokwi-cli mcp`) can start sims, read serial
   and press buttons, but cannot screenshot the whole circuit.

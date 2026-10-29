@@ -47,7 +47,6 @@ STATUS_COLOURS = [('#ff3a3a', '#3a1818'), ('#ffd23a', '#3a3214'), ('#3aff4a', '#
 # the time, and Wokwi shows it with brightness = (on-time share) ^ (1 / gamma), measured on
 # wokwi.com: default gamma 2.8 -> 32 % (too dim on the grey canvas), 30 -> 90 %. A real LED
 # display gets the same effect by driving each LED harder during its short time slot.
-# (tools/led_brightness_preview.html compares the values.)
 LED_GAMMA = '30'
 # How often Wokwi updates an LED's brightness. It averages over 8 updates, so the default
 # 80 gives a 100 ms window and anything moving smears over several pixels; 300 gives
