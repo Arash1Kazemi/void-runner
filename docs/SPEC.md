@@ -104,9 +104,9 @@ LED TEST: all LEDs, row sweep, column sweep, checkerboard, with rising beeps
 | Lives | EASY 4, NORMAL 3, HARD 3 (max 4). Hit → explosion, screen shake, 2 s blinking shield. +1 life after each phase; extra-life pickups. |
 | Ammo | Per ship (60 / 40 / 80). Every phase starts full. Ammo crates fall from the top: fly into them (+20 / 15 / 12 by difficulty). At 5 or less: warning beep and the yellow bar blinks; a crate is always sent then. Empty → dry click. |
 | Enemies | All slow; at most 4 / 5 / 6 on the screen at once (phase 1 / 2 / 3), so the 16 × 24 screen stays readable. They shoot only from rows 0–9, so no bullet starts right next to the ship. |
-| Space rocks | Hollow, lumpy shapes with a crater in the middle (small 3 × 3, big 4 × 4), so they look like no ship. Fall slowly and drift sideways; a big rock takes 2 hits and breaks into 2 small ones. Hurt on contact. |
+| Space rocks | Hollow, lumpy shapes with a crater in the middle (small 3 × 3, big 4 × 3), so they look like no ship. Fall slowly and drift sideways; a big rock takes 2 hits and breaks into 2 small ones. Hurt on contact. |
 | Explosions | Only the bosses and the player's ship explode into flying pixels. Enemies, rocks and mines just vanish (with a boom), and a hit enemy disappears for 120 ms – flying debris on 16 × 24 LEDs looked like bullets. No background stars in the game for the same reason. |
-| Pickups | Ammo crate (box) and extra life (blinking plus). Cruisers drop a life; other enemies sometimes drop ammo. |
+| Pickups | Ammo crate (blinking solid 3 × 3 block) and extra life (blinking plus). Cruisers drop a life; other enemies sometimes drop ammo. |
 | Bosses | One per phase; health on the red status bar (it drops with every hit); they blink before the HUNTER's dive, at the VOID KING's change and while burning; their bullets and helpers vanish when they die. |
 | Score | Drone 10, weaver 15, miner 20, cruiser 40, rocks 5/10, mine 2, pickup 5, bosses 200/300/500, phase bonus 100 × phase. High score + zone reached + difficulty in EEPROM. A higher score takes the record; an equal score only on a harder difficulty. |
 
@@ -208,7 +208,7 @@ The status bars fill during the logo like a start-up progress bar.
 | Controls | `tests/host/controls.txt` – tap, glide, row limit, single shot, auto-fire rate, move-cancels-fire, no glide while firing | pass |
 | Every screen | `tests/host/screens.txt` – logo skip, title, menu, hangar, options, LED test, best, pause, game over + new record, global keys, power cycle (EEPROM), demo | pass |
 | Whole game | `tests/host/playthrough.txt` – all phases, bosses, Void King form 2, victory | pass |
-| Balance | `run_tests.py --balance`: autopilot without shield, reacting only every 250 ms (roughly a human), 48 games per level (12 were too few: results jumped by ± 3) | EASY 43/48 won, NORMAL 26/48, HARD 8/48 |
+| Balance | `run_tests.py --balance`: autopilot without shield, reacting only every 250 ms (roughly a human), 48 games per level (12 were too few: results jumped by ± 3) | EASY 47/48 won, NORMAL 38/48, HARD 18/48 |
 
 The `tests/host` tests compile the real game code on the PC with a stand-in for Arduino
 (`tests/host/Arduino.h`) and run a whole game in well under a second – no Wokwi minutes.

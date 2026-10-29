@@ -166,7 +166,7 @@ void updateKing() {
       boss.nextAction = gameMs + 6000;
     } else {                                     // rock rain
       spawnFromTable(EN_ROCK_S, random(SCREEN_W - 3));
-      boss.nextAction = gameMs + 1200;
+      boss.nextAction = gameMs + 2200;
     }
   }
 }

@@ -52,17 +52,17 @@ const uint16_t ROCK_SMALL[3] PROGMEM = {
   0b1010000000000000,                          //  #.#
   0b0110000000000000,                          //  .##
 };
-const uint16_t ROCK_BIG[4] PROGMEM = {         // breaks into two small rocks
+const uint16_t ROCK_BIG[3] PROGMEM = {         // breaks into two small rocks
   0b0110000000000000,                          //  .##.
-  0b1001000000000000,                          //  #..#
-  0b1011000000000000,                          //  #.##
+  0b1101000000000000,                          //  ##.#
   0b0110000000000000,                          //  .##.
 };
 
+
 // ================================================================= pickups (blinking)
-const uint16_t PICKUP_AMMO[3] PROGMEM = {      // ammo crate
+const uint16_t PICKUP_AMMO[3] PROGMEM = {      // ammo crate: solid, unlike the hollow rocks
   0b1110000000000000,                          //  ###
-  0b1010000000000000,                          //  #.#
+  0b1110000000000000,                          //  ###
   0b1110000000000000,                          //  ###
 };
 const uint16_t PICKUP_LIFE[3] PROGMEM = {      // extra life
