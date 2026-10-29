@@ -94,6 +94,11 @@ Keys: W A S D move, R fire/OK, Q back, P pause, M mute (global), B brightness (g
   Bigger rocks made the game harder, so they fall slower (360 / 520 ms per row), big = 2 hits.
   User feedback 2026-10-29: rocks came too often → about 40 % fewer in the spawn lists,
   WARDEN drops rocks every 7 s, VOID KING's rock rain every 2.2 s.
+- User feedback 2026-10-29: enemies and rocks ran into each other and stayed merged →
+  `canMoveTo` in enemies.h: a move may not bring an enemy closer than one empty pixel to
+  another (it steps aside, turns back or waits); spawns take the nearest free column or
+  queue above the screen. Overlap frames in waves: 6653 → 0 (8 autopilot games).
+  Boss helpers still spawn inside the boss (QA report item 5, not fixed yet).
 - Sizes: 32.8 KB flash, 2.0 KB RAM. CPU time per picture on the AVR is not measured yet
   (Wokwi quota ran out) – `!s` prints `frame work us=`.
 
