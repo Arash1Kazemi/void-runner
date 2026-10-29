@@ -1,0 +1,164 @@
+# Records every screen for the documentation (tools/make_doc.py runs it; PC harness).
+# Each "dump" is one picture; make_doc.py names them in this order (DUMP_NAMES).
+seed 7
+record build/doc_logo.txt 100
+until "[VR] screen title" 10000
+stop
+run 1500
+dump
+run 5700
+dump
+tap R
+until "[VR] screen menu"
+dump
+
+# hangar: BOLT, DART, TWIN
+tap S
+tap R
+until "[VR] screen hangar"
+run 400
+dump
+tap D
+run 400
+dump
+tap D
+run 400
+dump
+tap Q
+until "[VR] screen menu"
+
+# options: LITE, SND, DIFF, TEST, then the LED test
+tap S
+tap R
+until "[VR] screen options"
+dump
+tap S
+dump
+tap S
+dump
+tap S
+dump
+tap R
+until "[VR] screen ledtest"
+run 800
+dump
+run 1500
+dump
+run 2500
+dump
+run 1500
+dump
+until "[VR] screen options" 10000
+tap Q
+until "[VR] screen menu"
+
+# best before any game
+tap S
+tap R
+until "[VR] screen best"
+dump
+tap Q
+until "[VR] screen menu"
+
+# a whole game with shield + autopilot
+tap W
+tap W
+tap W
+tap R
+until "[VR] phase 1"
+run 300
+dump
+run 900
+dump
+run 900
+dump
+send !i
+send !x
+run 6000
+dump
+run 4500
+dump
+tap P
+until "[VR] screen pause"
+run 300
+dump
+run 900
+dump
+tap P
+until "[VR] screen game"
+until "[VR] warning" 300000
+run 400
+dump
+run 1300
+dump
+until "[VR] boss" 10000
+run 3000
+dump
+run 3500
+dump
+until "[VR] boss down" 300000
+run 700
+dump
+until "[VR] phase clear" 10000
+run 300
+dump
+run 900
+dump
+run 900
+dump
+until "[VR] phase 2" 10000
+run 9000
+dump
+run 7000
+dump
+until "[VR] boss" 300000
+run 3000
+dump
+run 2500
+dump
+until "[VR] phase 3" 300000
+run 9000
+dump
+run 8000
+dump
+until "[VR] boss" 300000
+run 3000
+dump
+until "[VR] boss form 2" 300000
+run 1500
+dump
+until "[VR] screen victory" 300000
+run 1200
+dump
+run 1000
+dump
+run 1000
+dump
+run 1000
+dump
+run 1500
+tap R
+until "[VR] screen menu" 10000
+
+# a short game that is lost: game over, then BEST
+tap R
+until "[VR] phase 1"
+run 3000
+send !k
+until "[VR] screen gameover" 10000
+run 1500
+dump
+run 1600
+dump
+tap R
+until "[VR] screen menu" 10000
+tap S
+tap S
+tap S
+tap R
+until "[VR] screen best"
+dump
+run 900
+dump
+run 900
+dump
