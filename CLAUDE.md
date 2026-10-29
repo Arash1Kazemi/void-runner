@@ -36,7 +36,7 @@ wokwi.com) – there is no real hardware. Design spec: `docs/SPEC.md`. User-faci
   `visible wire crossings: 0`).
 - 432 LEDs = 16 × 24 game screen + 3 status bars (16 each), one matrix: 27 rows (anodes,
   pins 22–45 + 47–49), 16 columns (cathodes, A0–A15; column x = pin Ax = PORTF/PORTK bit).
-  Keypad 4 × 4: rows 18–21, columns 14–17. Buzzers on 5, 6, 11, 46 (Timer3/4/1/5 OCnA) =
+  Keypad 3 × 3 (exactly the 9 keys used; 4 × 4 until 29 Oct): rows 18–20, columns 15–17. Buzzers on 5, 6, 11, 46 (Timer3/4/1/5 OCnA) =
   lead, bass, SFX (SFX_VOICE = 2), rhythm guitar. No 5th timer is free (Timer0 millis,
   Timer2 scan); buzzer 4 is not turned (180°) so its wire runs up beside the board.
 - LED colours: dark hex body + coloured `lightColor` (zones red/white/green, status bars
@@ -48,7 +48,8 @@ wokwi.com) – there is no real hardware. Design spec: `docs/SPEC.md`. User-faci
   on/off (use `frameNo & 8`), "dim on alternate frames" no longer looks dim, and PWM
   dimming (B key / LITE) is barely visible in Wokwi (90 → 85 %). The off-LED look (grey
   leads, white highlights, body colour at 65 % opacity) is fixed by Wokwi's LED drawing.
-- Keypad labels are keyboard letters (Q W E R / A S D F / Z X C V / P M B H), `key` attr set.
+- Keypad labels are keyboard letters (Q W R / A S D / P M B), `key` attr set; the size comes
+  from the `BUTTONS` table in gen_circuit.py (code, tests and wiring drawing follow it).
 
 ## Code (`void_runner/`, header-per-module, one translation unit)
 `config.h` settings, Screen enum, difficulty tables · `display.h` scan ISR, drawing, text,

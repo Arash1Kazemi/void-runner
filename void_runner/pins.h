@@ -24,15 +24,14 @@ const uint8_t COL_PINS[SCREEN_W] = {
   A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15
 };
 
-// ---- 4 x 4 push-button keypad: contact 1 = row line, contact 2 = column line
-const uint8_t KEY_ROWS = 4, KEY_COLS = 4;
-const uint8_t KEY_ROW_PINS[KEY_ROWS] = { 18, 19, 20, 21 };
-const uint8_t KEY_COL_PINS[KEY_COLS] = { 17, 16, 15, 14 };
+// ---- 3 x 3 push-button keypad: contact 1 = row line, contact 2 = column line
+const uint8_t KEY_ROWS = 3, KEY_COLS = 3;
+const uint8_t KEY_ROW_PINS[KEY_ROWS] = { 18, 19, 20 };
+const uint8_t KEY_COL_PINS[KEY_COLS] = { 17, 16, 15 };
 const char KEY_NAMES[KEY_ROWS][KEY_COLS] = {
-  {'Q', 'W', 'E', 'R'},
-  {'A', 'S', 'D', 'F'},
-  {'Z', 'X', 'C', 'V'},
-  {'P', 'M', 'B', 'H'}
+  {'Q', 'W', 'R'},
+  {'A', 'S', 'D'},
+  {'P', 'M', 'B'}
 };
 
 // ---- buzzers, each on the "A" output of its own 16-bit timer

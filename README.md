@@ -1,7 +1,7 @@
 # VOID RUNNER
 
 A vertical space shooter for the Arduino Mega: a 16 × 24 screen of single LEDs plus three
-status bars, a 4 × 4 keypad of push buttons and four buzzers (lead, bass, rhythm guitar,
+status bars, a 3 × 3 keypad of push buttons and four buzzers (lead, bass, rhythm guitar,
 sound effects). Three phases, three bosses,
 three ships. Design and rules: [docs/SPEC.md](docs/SPEC.md). Pictures and animations of the
 real screens: [docs/media/](docs/media/).

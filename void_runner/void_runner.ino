@@ -3,7 +3,7 @@
  *
  * Hardware (see diagram.json; pins.h is generated with it by tools/gen_circuit.py):
  *   - 16 x 24 game screen + 3 status bars, 432 single LEDs in one row/column matrix
- *   - 4 x 4 keypad of single push buttons (W A S D move, R fire / OK, Q back,
+ *   - 3 x 3 keypad of single push buttons (W A S D move, R fire / OK, Q back,
  *     P pause, M sound on/off, B brightness)
  *   - 4 buzzers, one hardware timer each: lead, bass, effects, rhythm guitar
  *

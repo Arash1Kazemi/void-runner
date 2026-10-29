@@ -65,8 +65,8 @@ text((MX + MW / 2, MY + 22), 'Arduino Mega 2560', F_HEAD, anchor='ma')
 headers = [  # (y, label, colour)
     (MY + 90, 'A0 - A15  -  16 LED columns (-)', BLUE),
     (MY + 200, 'pins %s  -  27 LED rows (+)' % pin_range(gc.ROW_PINS), ORANGE),
-    (MY + 330, 'pins 18-21  -  keypad rows', VIOLET),
-    (MY + 390, 'pins 14-17  -  keypad columns', GREEN),
+    (MY + 330, 'pins %s-%s  -  keypad rows' % (gc.KEY_ROW_PINS[0], gc.KEY_ROW_PINS[-1]), VIOLET),
+    (MY + 390, 'pins %s-%s  -  keypad columns' % (gc.KEY_COL_PINS[-1], gc.KEY_COL_PINS[0]), GREEN),
     (MY + 480, 'pins %s  -  buzzers' % ', '.join(gc.BUZZER_PINS), VIOLET),
     (MY + 545, 'GND  -  buzzers (-)', GREY),
 ]
@@ -107,24 +107,24 @@ text((LX, LY + 5 * P + 10),
 
 # ---------------------------------------------------------------- keypad
 KX, KY, KP = 1000, 150, 70
-text((KX, KY - 45), 'Keypad: 16 push buttons, 4 x 4', F_HEAD)
+text((KX, KY - 45), 'Keypad: %d push buttons, %d x %d' % (gc.KR * gc.KC, gc.KR, gc.KC), F_HEAD)
 labels = [b[0] for row in gc.BUTTONS for b in row]
-for r in range(4):
+for r in range(gc.KR):
     y = KY + 20 + r * KP
-    line([(KX - 30, y), (KX + 4 * KP - 20, y)], VIOLET, 2)
-    text((KX + 4 * KP - 10, y), 'row %d -> pin %s' % (r + 1, gc.KEY_ROW_PINS[r]), F_SMALL, VIOLET, 'lm')
-for c in range(4):
+    line([(KX - 30, y), (KX + gc.KC * KP - 20, y)], VIOLET, 2)
+    text((KX + gc.KC * KP - 10, y), 'row %d -> pin %s' % (r + 1, gc.KEY_ROW_PINS[r]), F_SMALL, VIOLET, 'lm')
+for c in range(gc.KC):
     x = KX + 20 + c * KP
-    line([(x + 18, KY), (x + 18, KY + 4 * KP + 10)], GREEN, 2)
-    text((x + 18, KY + 4 * KP + 14), 'pin %s' % gc.KEY_COL_PINS[c], F_SMALL, GREEN, 'ma')
-for r in range(4):
-    for c in range(4):
+    line([(x + 18, KY), (x + 18, KY + gc.KR * KP + 10)], GREEN, 2)
+    text((x + 18, KY + gc.KR * KP + 14), 'pin %s' % gc.KEY_COL_PINS[c], F_SMALL, GREEN, 'ma')
+for r in range(gc.KR):
+    for c in range(gc.KC):
         x, y = KX + 20 + c * KP, KY + 20 + r * KP
         d.rounded_rectangle((x - 16, y - 16, x + 16, y + 16), 5, fill=(70, 70, 70), outline=FG)
-        text((x, y), labels[r * 4 + c], F_HEAD, anchor='mm')
+        text((x, y), labels[r * gc.KC + c], F_HEAD, anchor='mm')
 line([(KX - 30, KY + 20), (KX - 30, MY + 330), (MX + MW, MY + 330)], VIOLET, 6)
-line([(KX + 38, KY + 4 * KP + 40), (KX + 38, MY + 390), (MX + MW, MY + 390)], GREEN, 6)
-text((KX + 60, KY + 4 * KP + 45),
+line([(KX + 38, KY + gc.KR * KP + 40), (KX + 38, MY + 390), (MX + MW, MY + 390)], GREEN, 6)
+text((KX + 60, KY + gc.KR * KP + 45),
      'A button connects its row to its column.\n'
      'The Mega drives one row LOW at a time and\n'
      'reads the columns: a LOW column = that key\n'
@@ -153,7 +153,7 @@ text((BXp, BYp + 140),
 text((60, 660), 'Thick line = a bundle of separate wires side by side\n'
                 '(one wire per LED row, LED column, key row or key column).', F, DIM)
 
-text((30, H - 40), 'Parts: 1 Arduino Mega, 432 LEDs, 16 push buttons, 4 buzzers. No resistors, no modules, no libraries.',
+text((30, H - 40), 'Parts: 1 Arduino Mega, 432 LEDs, 9 push buttons, 4 buzzers. No resistors, no modules, no libraries.',
      F, DIM)
 out = Path(__file__).resolve().parents[1] / 'docs' / 'media' / 'wiring.png'
 img.save(out)

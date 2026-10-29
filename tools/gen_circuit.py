@@ -6,7 +6,8 @@ Builds the whole Wokwi circuit (diagram.json) from the tables below and writes t
 pin table for the sketch (pins.h), so the circuit and the code can never disagree.
 
   * 16 x 24 game screen + 3 status bars of single LEDs, wired as one row/column matrix
-  * 4 x 4 push-button keypad (every button also answers to a PC keyboard key)
+  * 3 x 3 push-button keypad: exactly the 9 keys the game uses (every button also answers
+    to a PC keyboard key)
   * 4 buzzers
 
 Layout: LED panel on the left, the Mega (turned 180 degrees) on the right with its
@@ -54,12 +55,13 @@ LED_GAMMA = '30'
 LED_FPS = '300'
 
 # Keypad, row by row: (label, PC keyboard key, button colour).
+# Q back, R fire / OK; W A S D move (W above S, like a keyboard); P pause, M sound, B light.
 BUTTONS = [
-    [('Q', 'q', 'white'), ('W', 'w', 'blue'), ('E', 'e', '#555555'), ('R', 'r', 'red')],
-    [('A', 'a', 'blue'), ('S', 's', 'blue'), ('D', 'd', 'blue'), ('F', 'f', '#555555')],
-    [('Z', 'z', '#555555'), ('X', 'x', '#555555'), ('C', 'c', '#555555'), ('V', 'v', '#555555')],
-    [('P', 'p', 'yellow'), ('M', 'm', 'yellow'), ('B', 'b', 'yellow'), ('H', 'h', '#555555')],
+    [('Q', 'q', 'white'), ('W', 'w', 'blue'), ('R', 'r', 'red')],
+    [('A', 'a', 'blue'), ('S', 's', 'blue'), ('D', 'd', 'blue')],
+    [('P', 'p', 'yellow'), ('M', 'm', 'yellow'), ('B', 'b', 'yellow')],
 ]
+KR, KC = len(BUTTONS), len(BUTTONS[0])               # keypad rows and columns
 
 # Visible wire colours by job (wires inside the LED panel are hidden).
 WIRE = {'row_bus': 'orange', 'col_bus': 'blue', 'key_row': 'purple', 'key_col': 'green',
@@ -140,8 +142,8 @@ ROW_PINS = [None] * TOTAL_ROWS
 for i, row in enumerate(PHYS_ROWS):
     ROW_PINS[row] = ROW_PIN_OF_PHYS[i]
 COL_PINS = ['A%d' % x for x in range(SCREEN_W)]      # column x -> Ax (PORTF / PORTK bit order)
-KEY_ROW_PINS = ['18', '19', '20', '21']
-KEY_COL_PINS = ['17', '16', '15', '14']
+KEY_ROW_PINS = ['18', '19', '20', '21'][:KR]
+KEY_COL_PINS = ['17', '16', '15', '14'][:KC]
 BUZZER_PINS = ['5', '6', '11', '46']                  # OC3A, OC4A, OC1A, OC5A
 BUZZER_TIMERS = ['Timer3 OC3A', 'Timer4 OC4A', 'Timer1 OC1A', 'Timer5 OC5A']
 
@@ -217,7 +219,7 @@ for i, row in enumerate(PHYS_ROWS):
 # --- keypad and buzzers under the Mega (wires come up into its lower header)
 BELOW = MY + MEGA_H                    # lower edge of the turned board
 KX, KPX, KPY = MX + 40, 90, 70
-BX, BPX = KX + 4 * KPX + 30, 85
+BX, BPX = KX + KC * KPX + 30, 85
 
 def fan_heights(items, top, step):
     """items: (lane_x, pin_x, key) of wires coming up from below. Returns a turn height per
@@ -232,30 +234,30 @@ def fan_heights(items, top, step):
 
 buz_top = BELOW + 16
 key_top = buz_top + LANE * 4 + 12
-KY = key_top + LANE * 8 + 30
+KY = key_top + LANE * (KR + KC) + 30
 BY = KY + 10
 
-for r in range(4):
-    for c in range(4):
+for r in range(KR):
+    for c in range(KC):
         label, key, colour = BUTTONS[r][c]
         part('wokwi-pushbutton', 'btn_%s' % label, KX + KPX * c, KY + KPY * r,
              {'color': colour, 'label': label, 'key': key})
-for r in range(4):                    # contact 1 of each button = its row line
-    for c in range(3):
+for r in range(KR):                   # contact 1 of each button = its row line
+    for c in range(KC - 1):
         wire('btn_%s:1.r' % BUTTONS[r][c][0], 'btn_%s:1.l' % BUTTONS[r][c + 1][0],
              WIRE['key_row'], [], 'link')
-for c in range(4):                    # contact 2 of each button = its column line
-    for r in range(3):
+for c in range(KC):                   # contact 2 of each button = its column line
+    for r in range(KR - 1):
         wire('btn_%s:2.r' % BUTTONS[r][c][0], 'btn_%s:2.r' % BUTTONS[r + 1][c][0],
              WIRE['key_col'], ['h11', '*', 'h11'], 'link')
 
 key_items = []                         # (lane, pin_x, key, src, pin, (x, y), first move, colour)
-for r in range(4):
+for r in range(KR):
     sx_, sy_ = KX + BTN_PINS['1.l'][0], KY + KPY * r + BTN_PINS['1.l'][1]
     lane = sx_ - 12 - 8 * r            # lower rows take outer lanes
     key_items.append((lane, mega_pin(KEY_ROW_PINS[r])[0], 'r%d' % r, 'btn_%s:1.l' % BUTTONS[r][0][0],
                       KEY_ROW_PINS[r], (sx_, sy_), mv('h', lane - sx_), WIRE['key_row']))
-for c in range(4):
+for c in range(KC):
     sx_, sy_ = KX + KPX * c + BTN_PINS['2.r'][0], KY + BTN_PINS['2.r'][1]
     key_items.append((sx_ + 11, mega_pin(KEY_COL_PINS[c])[0], 'c%d' % c, 'btn_%s:2.r' % BUTTONS[0][c][0],
                       KEY_COL_PINS[c], (sx_, sy_), 'h11', WIRE['key_col']))
@@ -357,8 +359,8 @@ def check_nets():
             pid = led_id(x, row)
             if mega_of.get(pid + ':A') != ROW_PINS[row] or mega_of.get(pid + ':C') != COL_PINS[x]:
                 errors += 1
-    for r in range(4):
-        for c in range(4):
+    for r in range(KR):
+        for c in range(KC):
             pid = 'btn_%s' % BUTTONS[r][c][0]
             if mega_of.get(pid + ':1.l') != KEY_ROW_PINS[r] or mega_of.get(pid + ':2.l') != KEY_COL_PINS[c]:
                 errors += 1
@@ -431,8 +433,8 @@ const uint8_t COL_PINS[SCREEN_W] = {{
   {arr(COL_PINS)}
 }};
 
-// ---- 4 x 4 push-button keypad: contact 1 = row line, contact 2 = column line
-const uint8_t KEY_ROWS = 4, KEY_COLS = 4;
+// ---- {KR} x {KC} push-button keypad: contact 1 = row line, contact 2 = column line
+const uint8_t KEY_ROWS = {KR}, KEY_COLS = {KC};
 const uint8_t KEY_ROW_PINS[KEY_ROWS] = {{ {arr(KEY_ROW_PINS)} }};
 const uint8_t KEY_COL_PINS[KEY_COLS] = {{ {arr(KEY_COL_PINS)} }};
 const char KEY_NAMES[KEY_ROWS][KEY_COLS] = {{

@@ -18,10 +18,10 @@ Pictures of the real screens (rendered from the running code): `docs/media/` –
 |---|---|---|
 | Arduino Mega 2560 | 1 | – |
 | Single LEDs (`wokwi-led`), one matrix | 432 | 16 × 24 game screen + 3 status bars of 16. 27 row lines (anodes) on pins 22–45 and 47–49, 16 column lines (cathodes) on A0–A15 |
-| Push buttons (`wokwi-pushbutton`), 4 × 4 matrix | 16 | rows on 18–21, columns on 14–17 |
+| Push buttons (`wokwi-pushbutton`), 3 × 3 matrix | 9 | rows on 18–20, columns on 15–17 |
 | Buzzers (`wokwi-buzzer`) | 4 | pins 5, 6, 11, 46 (Timer3, Timer4, Timer1, Timer5 outputs) |
 
-- 55 of the Mega's 68 usable pins (27 + 16 + 8 + 4), each header used for one job: double header = LED rows,
+- 53 of the Mega's 68 usable pins (27 + 16 + 6 + 4), each header used for one job: double header = LED rows,
   analog header = LED columns, communication header = keypad, PWM header = buzzers. The fourth
   buzzer is on pin 46 of the double header, because that is Timer5's output (the LED row that
   was there moved to pin 49); it is the last free timer – Timer0 runs `millis()`, Timer2 the screen.
@@ -59,15 +59,15 @@ The keypad buttons are labelled like keyboard keys and also react to the PC keyb
 (click an empty spot of the circuit first; use the English keyboard layout).
 
 ```
-┌───┬───┬───┬───┐
-│ Q │ W │ E │ R │    W A S D  move
-├───┼───┼───┼───┤    R        fire (hold = auto-fire) · OK in menus
-│ A │ S │ D │ F │    Q        back (in the game: pause)
-├───┼───┼───┼───┤    P        pause / continue
-│ Z │ X │ C │ V │    M        sound on/off (any screen, saved)
-├───┼───┼───┼───┤    B        brightness 100 / 50 / 20 % (any screen, saved)
-│ P │ M │ B │ H │    E F Z X C V H  spare
-└───┴───┴───┴───┘
+┌───┬───┬───┐
+│ Q │ W │ R │    W A S D  move
+├───┼───┼───┤    R        fire (hold = auto-fire) · OK in menus
+│ A │ S │ D │    Q        back (in the game: pause)
+├───┼───┼───┤    P        pause / continue
+│ P │ M │ B │    M        sound on/off (any screen, saved)
+└───┴───┴───┘    B        brightness 100 / 50 / 20 % (any screen, saved)
+
+3 × 3 = exactly the 9 keys the game uses (it was 4 × 4 with 7 spare keys until 29 Oct).
 ```
 
 **Firing (agreed):** press R → one bullet; keep holding → one more every 0.2 s (a chirp when

@@ -1,7 +1,7 @@
 /*
- * input.h -- the 4 x 4 push-button keypad.
+ * input.h -- the 3 x 3 push-button keypad (the 9 keys of the game).
  *
- * Same method as the course: drive one row LOW and read the four columns
+ * Same method as the course: drive one row LOW and read the three columns
  * (INPUT_PULLUP, so a pressed key reads LOW). Rows that are not being read are set to
  * INPUT instead of HIGH: with two keys of one column pressed, a HIGH and a LOW output
  * would otherwise be shorted together through the buttons.
@@ -32,7 +32,7 @@ bool keyPressed(char key) { return keysPressed & keyBit(key); }
 // Forgets this picture's key presses (called at the end of every picture).
 void inputEndFrame() { keysPressed = 0; }
 
-// Reads the whole keypad once: drives one row LOW at a time and reads the four columns.
+// Reads the whole keypad once: drives one row LOW at a time and reads the three columns.
 // Returns one bit per key that is down (no debouncing here).
 uint16_t readKeys() {
   uint16_t mask = 0;
