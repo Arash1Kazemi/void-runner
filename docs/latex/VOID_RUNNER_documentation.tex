@@ -128,7 +128,7 @@ Game rows 6–17 & white & open space, message pages\\\hline
 
 \subsection*{3.3 The keypad and the controls}
 \phantomsection\addcontentsline{toc}{subsection}{3.3 The keypad and the controls}
-The 9 push buttons form a 3 × 3 matrix, one button for each key the game uses. The code drives one row LOW at a time and reads the four columns with the internal pull-ups, so a pressed key reads LOW. The rows that are not being read are switched to inputs, so two pressed keys can never short a HIGH and a LOW output together. Every key is debounced. The buttons are labelled like keyboard keys and also react to the PC keyboard in Wokwi.
+The 9 push buttons form a 3 × 3 matrix, one button for each key the game uses. The code drives one row LOW at a time and reads the three columns with the internal pull-ups, so a pressed key reads LOW. The rows that are not being read are switched to inputs, so two pressed keys can never short a HIGH and a LOW output together. Every key is debounced. The buttons are labelled like keyboard keys and also react to the PC keyboard in Wokwi.
 
 \begin{figure}[H]\centering
 \includegraphics[width=8.00cm]{figures/cu_keypad.png}
@@ -6621,7 +6621,7 @@ def performance(doc, pics):
 
     doc.h('3.3 The keypad and the controls', 2)
     R('The 9 push buttons form a 3 × 3 matrix, one button for each key the game uses. The code drives one row LOW at a time and reads the '
-      'four columns with the internal pull-ups, so a pressed key reads LOW. The rows that are not '
+      'three columns with the internal pull-ups, so a pressed key reads LOW. The rows that are not '
       'being read are switched to inputs, so two pressed keys can never short a HIGH and a LOW '
       'output together. Every key is debounced. The buttons are labelled like keyboard keys and also '
       'react to the PC keyboard in Wokwi.')

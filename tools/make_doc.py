@@ -180,6 +180,8 @@ def shade(paragraph_or_cell, fill):
 
 
 class Doc:
+    FIG_LABEL, TAB_LABEL = 'Figure', 'Table'          # caption words (the Persian version changes them)
+
     def __init__(self):
         self.d = Document()
         sec = self.d.sections[0]
@@ -246,7 +248,7 @@ class Doc:
 
     def caption(self, text):
         self.fig += 1
-        para = self.p('Figure %d. %s' % (self.fig, text), size=9, align=WD_ALIGN_PARAGRAPH.CENTER,
+        para = self.p('%s %d. %s' % (self.FIG_LABEL, self.fig, text), size=9, align=WD_ALIGN_PARAGRAPH.CENTER,
                       italic=True, colour=GREY)
         para.paragraph_format.space_after = Pt(10)
 
@@ -309,7 +311,7 @@ class Doc:
                     row.cells[c].width = Cm(w)
         if caption:
             self.tab += 1
-            para = self.p('Table %d. %s' % (self.tab, caption), size=9,
+            para = self.p('%s %d. %s' % (self.TAB_LABEL, self.tab, caption), size=9,
                           align=WD_ALIGN_PARAGRAPH.CENTER, italic=True, colour=GREY)
             para.paragraph_format.space_after = Pt(10)
         else:
@@ -524,7 +526,7 @@ def performance(doc, pics):
 
     doc.h('3.3 The keypad and the controls', 2)
     R('The 9 push buttons form a 3 × 3 matrix, one button for each key the game uses. The code drives one row LOW at a time and reads the '
-      'four columns with the internal pull-ups, so a pressed key reads LOW. The rows that are not '
+      'three columns with the internal pull-ups, so a pressed key reads LOW. The rows that are not '
       'being read are switched to inputs, so two pressed keys can never short a HIGH and a LOW '
       'output together. Every key is debounced. The buttons are labelled like keyboard keys and also '
       'react to the PC keyboard in Wokwi.')

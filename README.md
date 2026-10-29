@@ -78,3 +78,8 @@ Serial test commands (type them in the Wokwi terminal, always with `!`): `!d` sc
   `void_runner/tunes.h` (listen to them: `docs/media/music/`)
 - `tools/render_dumps.py` – turns screen dumps into a PNG or an animated GIF
 - `tools/media_record.script` – PC-harness script that records the clips in `docs/media/`
+- `tools/make_doc.py` – builds the project documentation `docs/VOID_RUNNER_documentation.docx`
+  (open it with Google Docs; `tools/make_doc_fa.py` the Persian one, `..._fa.docx`);
+  `tools/make_latex.py` builds the same as LaTeX + PDF in
+  `docs/latex/`, `tools/make_latex_fa.py` in Persian in `docs/latex_fa/` (translations in
+  `tools/fa_text.json`). Compile with XeLaTeX (on Overleaf: upload the folder, compiler XeLaTeX)
