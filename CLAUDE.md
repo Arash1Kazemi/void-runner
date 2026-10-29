@@ -87,7 +87,7 @@ Keys: W A S D move, R fire/OK, Q back, P pause, M mute (global), B brightness (g
   only for bosses and the player's ship; no background stars in the game.
 - Balance (found with the autopilot): slow enemies pile up, so each phase caps enemies on
   screen (4/5/6); enemies only shoot from rows 0–9 (point-blank shots were undodgeable).
-  With a 250 ms-reaction bot, 48 games per level: EASY 47/48, NORMAL 38/48, HARD 18/48 wins
+  With a 250 ms-reaction bot, 48 games per level: EASY 46/48, NORMAL 40/48, HARD 23/48 wins
   (12 games were too noisy). Re-run after tuning.
 - Rocks are hollow (small 3 × 3, big 4 × 3, user feedback 2026-10-24: solid blocks were not
   recognisable); contact with enemies counts only when lit pixels touch (`enemyTouchesShip`).

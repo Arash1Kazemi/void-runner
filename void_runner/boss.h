@@ -48,7 +48,7 @@ void bossSlide(uint16_t ms) {
 }
 
 // WARDEN's turn: slides along the top, fires a 3-way spread (5-way when angry) and drops
-// rocks every 5 seconds.
+// rocks every 7 seconds.
 void updateWarden() {
   bossSlide(bossAngry() ? 90 : 150);
   if (gameMs >= boss.nextShot) {       // 3-way spread from the three "guns"
@@ -65,7 +65,7 @@ void updateWarden() {
   if (gameMs >= boss.nextAction) {     // drops rocks
     spawnFromTable(EN_ROCK_S, random(SCREEN_W - 3));
     if (bossAngry()) spawnFromTable(EN_ROCK_S, random(SCREEN_W - 3));
-    boss.nextAction = gameMs + 5000;
+    boss.nextAction = gameMs + 7000;
   }
 }
 

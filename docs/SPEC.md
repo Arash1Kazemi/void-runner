@@ -208,7 +208,7 @@ The status bars fill during the logo like a start-up progress bar.
 | Controls | `tests/host/controls.txt` – tap, glide, row limit, single shot, auto-fire rate, move-cancels-fire, no glide while firing | pass |
 | Every screen | `tests/host/screens.txt` – logo skip, title, menu, hangar, options, LED test, best, pause, game over + new record, global keys, power cycle (EEPROM), demo | pass |
 | Whole game | `tests/host/playthrough.txt` – all phases, bosses, Void King form 2, victory | pass |
-| Balance | `run_tests.py --balance`: autopilot without shield, reacting only every 250 ms (roughly a human), 48 games per level (12 were too few: results jumped by ± 3) | EASY 47/48 won, NORMAL 38/48, HARD 18/48 |
+| Balance | `run_tests.py --balance`: autopilot without shield, reacting only every 250 ms (roughly a human), 48 games per level (12 were too few: results jumped by ± 3) | EASY 46/48 won, NORMAL 40/48, HARD 23/48 |
 
 The `tests/host` tests compile the real game code on the PC with a stand-in for Arduino
 (`tests/host/Arduino.h`) and run a whole game in well under a second – no Wokwi minutes.
