@@ -55,17 +55,22 @@ each), with big digits and symbols where a word is not needed.
 
 ## 2. Controls
 
-The keypad buttons are labelled like keyboard keys and also react to the PC keyboard
+The keypad buttons are labelled in the style of an Atari joystick and console (UP, LEFT, DOWN,
+RIGHT, FIRE, BACK, PAUSE, SOUND, LIGHT) and also react to the PC keyboard keys shown below
 (click an empty spot of the circuit first; use the English keyboard layout).
 
 ```
-┌───┬───┬───┐
-│ Q │ W │ R │    W A S D  move
-├───┼───┼───┤    R        fire (hold = auto-fire) · OK in menus
-│ A │ S │ D │    Q        back (in the game: pause)
-├───┼───┼───┤    P        pause / continue
-│ P │ M │ B │    M        sound on/off (any screen, saved)
-└───┴───┴───┘    B        brightness 100 / 50 / 20 % (any screen, saved)
+   button name     keyboard key
+┌───────┬───────┬───────┐
+│ BACK  │  UP   │ FIRE  │    Q  W  R      W A S D  move
+│  (Q)  │  (W)  │  (R)  │    R  fire (hold = auto-fire) · OK in menus
+├───────┼───────┼───────┤    Q  back (in the game: pause)
+│ LEFT  │ DOWN  │ RIGHT │    P  pause / continue
+│  (A)  │  (S)  │  (D)  │    M  sound on/off (any screen, saved)
+├───────┼───────┼───────┤    B  brightness 100 / 50 / 20 % (any screen, saved)
+│ PAUSE │ SOUND │ LIGHT │
+│  (P)  │  (M)  │  (B)  │
+└───────┴───────┴───────┘
 
 3 × 3 = exactly the 9 keys the game uses (it was 4 × 4 with 7 spare keys until 29 Oct).
 ```

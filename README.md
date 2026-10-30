@@ -12,14 +12,14 @@ real screens: [docs/media/](docs/media/).
 2. `F1` → **Wokwi: Start Simulator** (the compiled program is in `build/`).
 3. **Click an empty spot of the circuit**, then use the keyboard (English layout):
 
-| Key | Does |
-|---|---|
-| W A S D | move (tap = 1 pixel, hold = glide) |
-| R | fire (tap = 1 bullet, hold = auto-fire) · OK in menus |
-| Q | back · pause in the game |
-| P | pause / continue |
-| M | sound on/off (any screen) |
-| B | brightness 100 / 50 / 20 % (any screen) |
+| Key | Button | Does |
+|---|---|---|
+| W A S D | UP LEFT DOWN RIGHT | move (tap = 1 pixel, hold = glide) |
+| R | FIRE | fire (tap = 1 bullet, hold = auto-fire) · OK in menus |
+| Q | BACK | back · pause in the game |
+| P | PAUSE | pause / continue |
+| M | SOUND | sound on/off (any screen) |
+| B | LIGHT | brightness 100 / 50 / 20 % (any screen) |
 
 After changing the code, run `build.cmd` (or tell Claude) and restart the simulator.
 

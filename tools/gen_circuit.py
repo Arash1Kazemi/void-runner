@@ -54,12 +54,14 @@ LED_GAMMA = '30'
 # 27 ms (about two full screen scans), which keeps moving things sharp.
 LED_FPS = '300'
 
-# Keypad, row by row: (label, PC keyboard key, button colour).
-# Q back, R fire / OK; W A S D move (W above S, like a keyboard); P pause, M sound, B light.
+# Keypad, row by row: (key letter, PC keyboard key, button colour, name shown on the button).
+# The letter is what the code and the part ids use (never change it without the code); the
+# shown name is only the text under the button, in the style of an Atari joystick + console:
+# W A S D move (W above S, like a keyboard), R fire / OK, Q back, P pause, M sound, B light.
 BUTTONS = [
-    [('Q', 'q', 'white'), ('W', 'w', 'blue'), ('R', 'r', 'red')],
-    [('A', 'a', 'blue'), ('S', 's', 'blue'), ('D', 'd', 'blue')],
-    [('P', 'p', 'yellow'), ('M', 'm', 'yellow'), ('B', 'b', 'yellow')],
+    [('Q', 'q', 'white', 'BACK'), ('W', 'w', 'blue', 'UP'), ('R', 'r', 'red', 'FIRE')],
+    [('A', 'a', 'blue', 'LEFT'), ('S', 's', 'blue', 'DOWN'), ('D', 'd', 'blue', 'RIGHT')],
+    [('P', 'p', 'yellow', 'PAUSE'), ('M', 'm', 'yellow', 'SOUND'), ('B', 'b', 'yellow', 'LIGHT')],
 ]
 KR, KC = len(BUTTONS), len(BUTTONS[0])               # keypad rows and columns
 
@@ -239,9 +241,9 @@ BY = KY + 10
 
 for r in range(KR):
     for c in range(KC):
-        label, key, colour = BUTTONS[r][c]
-        part('wokwi-pushbutton', 'btn_%s' % label, KX + KPX * c, KY + KPY * r,
-             {'color': colour, 'label': label, 'key': key})
+        letter, key, colour, name = BUTTONS[r][c]
+        part('wokwi-pushbutton', 'btn_%s' % letter, KX + KPX * c, KY + KPY * r,
+             {'color': colour, 'label': name, 'key': key})
 for r in range(KR):                   # contact 1 of each button = its row line
     for c in range(KC - 1):
         wire('btn_%s:1.r' % BUTTONS[r][c][0], 'btn_%s:1.l' % BUTTONS[r][c + 1][0],

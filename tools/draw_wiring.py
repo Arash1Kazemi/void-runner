@@ -108,7 +108,7 @@ text((LX, LY + 5 * P + 10),
 # ---------------------------------------------------------------- keypad
 KX, KY, KP = 1000, 150, 70
 text((KX, KY - 45), 'Keypad: %d push buttons, %d x %d' % (gc.KR * gc.KC, gc.KR, gc.KC), F_HEAD)
-labels = [b[0] for row in gc.BUTTONS for b in row]
+labels = [b[3] for row in gc.BUTTONS for b in row]      # the names shown on the buttons
 for r in range(gc.KR):
     y = KY + 20 + r * KP
     line([(KX - 30, y), (KX + gc.KC * KP - 20, y)], VIOLET, 2)
@@ -120,8 +120,8 @@ for c in range(gc.KC):
 for r in range(gc.KR):
     for c in range(gc.KC):
         x, y = KX + 20 + c * KP, KY + 20 + r * KP
-        d.rounded_rectangle((x - 16, y - 16, x + 16, y + 16), 5, fill=(70, 70, 70), outline=FG)
-        text((x, y), labels[r * gc.KC + c], F_HEAD, anchor='mm')
+        d.rounded_rectangle((x - 31, y - 16, x + 31, y + 16), 5, fill=(70, 70, 70), outline=FG)
+        text((x, y), labels[r * gc.KC + c], F_SMALL, anchor='mm')
 line([(KX - 30, KY + 20), (KX - 30, MY + 330), (MX + MW, MY + 330)], VIOLET, 6)
 line([(KX + 38, KY + gc.KR * KP + 40), (KX + 38, MY + 390), (MX + MW, MY + 390)], GREEN, 6)
 text((KX + 60, KY + gc.KR * KP + 45),

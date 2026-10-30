@@ -48,8 +48,10 @@ wokwi.com) – there is no real hardware. Design spec: `docs/SPEC.md`. User-faci
   on/off (use `frameNo & 8`), "dim on alternate frames" no longer looks dim, and PWM
   dimming (B key / LITE) is barely visible in Wokwi (90 → 85 %). The off-LED look (grey
   leads, white highlights, body colour at 65 % opacity) is fixed by Wokwi's LED drawing.
-- Keypad labels are keyboard letters (Q W R / A S D / P M B), `key` attr set; the size comes
-  from the `BUTTONS` table in gen_circuit.py (code, tests and wiring drawing follow it).
+- Keypad: keys Q W R / A S D / P M B (the `key` attr, what the code uses); the text shown on the
+  buttons is Atari style (BACK UP FIRE / LEFT DOWN RIGHT / PAUSE SOUND LIGHT, 30 Oct). Size, key
+  letters and shown names all come from the `BUTTONS` table in gen_circuit.py (code, tests and
+  wiring drawing follow it); change a shown name there, never the letter.
 
 ## Code (`void_runner/`, header-per-module, one translation unit)
 `config.h` settings, Screen enum, difficulty tables · `display.h` scan ISR, drawing, text,

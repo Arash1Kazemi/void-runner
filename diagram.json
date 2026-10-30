@@ -5202,7 +5202,7 @@
    "left": 1132,
    "attrs": {
     "color": "white",
-    "label": "Q",
+    "label": "BACK",
     "key": "q"
    }
   },
@@ -5213,7 +5213,7 @@
    "left": 1222,
    "attrs": {
     "color": "blue",
-    "label": "W",
+    "label": "UP",
     "key": "w"
    }
   },
@@ -5224,7 +5224,7 @@
    "left": 1312,
    "attrs": {
     "color": "red",
-    "label": "R",
+    "label": "FIRE",
     "key": "r"
    }
   },
@@ -5235,7 +5235,7 @@
    "left": 1132,
    "attrs": {
     "color": "blue",
-    "label": "A",
+    "label": "LEFT",
     "key": "a"
    }
   },
@@ -5246,7 +5246,7 @@
    "left": 1222,
    "attrs": {
     "color": "blue",
-    "label": "S",
+    "label": "DOWN",
     "key": "s"
    }
   },
@@ -5257,7 +5257,7 @@
    "left": 1312,
    "attrs": {
     "color": "blue",
-    "label": "D",
+    "label": "RIGHT",
     "key": "d"
    }
   },
@@ -5268,7 +5268,7 @@
    "left": 1132,
    "attrs": {
     "color": "yellow",
-    "label": "P",
+    "label": "PAUSE",
     "key": "p"
    }
   },
@@ -5279,7 +5279,7 @@
    "left": 1222,
    "attrs": {
     "color": "yellow",
-    "label": "M",
+    "label": "SOUND",
     "key": "m"
    }
   },
@@ -5290,7 +5290,7 @@
    "left": 1312,
    "attrs": {
     "color": "yellow",
-    "label": "B",
+    "label": "LIGHT",
     "key": "b"
    }
   },

@@ -532,7 +532,7 @@ def performance(doc, pics):
     R('The 9 push buttons form a 3 × 3 matrix, one button for each key the game uses. The code drives one row LOW at a time and reads the '
       'three columns with the internal pull-ups, so a pressed key reads LOW. The rows that are not '
       'being read are switched to inputs, so two pressed keys can never short a HIGH and a LOW '
-      'output together. Every key is debounced. The buttons are labelled like keyboard keys and also '
+      'output together. Every key is debounced. The buttons are labelled in the style of an Atari joystick (UP, DOWN, FIRE ...) and also '
       'react to the PC keyboard in Wokwi.')
     doc.picture(pics['cu_keypad'], 8, 'The keypad in Wokwi.')
     doc.table(['Key', 'Action'], [
