@@ -3,3 +3,8 @@ build/
 # local tool settings
 .claude/
 __pycache__/
+
+# generated documentation (build it with tools/make_doc*.py and tools/make_latex*.py)
+docs/*.docx
+docs/latex/
+docs/latex_fa/
