@@ -76,6 +76,10 @@ def make_media():
                          text=True, errors='replace').stdout
     dumps = rd.read_dumps(log)
     assert len(dumps) == len(DUMP_NAMES), 'got %d dumps' % len(dumps)
+    for n, d in zip(DUMP_NAMES, dumps):
+        if n.startswith('hangar_'):          # the engine flame flickers every 20 ms (screens.h:
+            for r in (15, 16):               # frameNo & 1): show the picture with the flame on
+                d[3 + r] = d[3 + r][:6] + '###' + d[3 + r][9:]     # (dump rows: 3 bars, then the screen)
     pics = {n: screen_png(d, n) for n, d in zip(DUMP_NAMES, dumps)}
     logo = rd.read_dumps((BUILD / 'doc_logo.txt').read_text(encoding='utf-8'))
     for name, t in [('logo_warp', 600), ('logo_ship', 1600), ('logo_letters', 3100),

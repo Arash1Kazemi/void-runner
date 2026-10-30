@@ -10,7 +10,7 @@ right.
 Usage (from the project folder, after `python tests/host/run_tests.py` built build/sim.exe):
     python tools/make_doc_fa.py
 """
-import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -24,16 +24,80 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'tools'))
 import make_doc as md                                        # noqa: E402
 import make_latex_fa as fa                                   # noqa: E402  (translations)
+import render_dumps as rd                                    # noqa: E402
 
 OUT = ROOT / 'docs' / 'VOID_RUNNER_documentation_fa.docx'
 FONT = 'Tahoma'                                              # has Persian letters on Windows
 T = fa.translate
 
 
+# The main menu with each item chosen (only in the Persian document: its own part, 3.6).
+MENU_SCRIPT = '''seed 7
+until "[VR] screen title" 10000
+tap R
+until "[VR] screen menu"
+dump
+tap S
+dump
+tap S
+dump
+tap S
+dump
+'''
+
+
+def menu_pictures():
+    script = md.BUILD / 'doc_menu.script'
+    script.write_text(MENU_SCRIPT, encoding='utf-8', newline='\n')
+    sim = md.BUILD / ('sim.exe' if sys.platform == 'win32' else 'sim')
+    log = subprocess.run([str(sim), str(script)], cwd=md.ROOT, capture_output=True, text=True,
+                         errors='replace').stdout
+    dumps = rd.read_dumps(log)
+    assert len(dumps) == 4, 'got %d menu dumps' % len(dumps)
+    return [md.screen_png(d, 'menu_%d' % i) for i, d in enumerate(dumps)]
+
+
+def menu_section(doc):
+    """The main menu in detail: what each item opens and how the keys work."""
+    doc.h('منوی اصلی', 3)
+    doc.rich('منوی اصلی پس از صفحهٔ عنوان با فشار **R** باز می‌شود و مرکز همهٔ بخش‌های دستگاه است. '
+             'چهار گزینه دارد که هر کدام در یکی از نوارهای رنگی صفحه نوشته شده‌اند: **PLAY** در '
+             'منطقهٔ قرمز بالا، **SHIP** و **OPTS** در منطقهٔ سفید وسط و **BEST** در منطقهٔ سبز '
+             'پایین. هر نام چهار حرف کوچک است تا کامل در عرض ۱۶ پیکسلی صفحه جا شود. گزینهٔ '
+             'انتخاب‌شده با یک خط زیر آن مشخص می‌شود و نوارهای وضعیت در منو خاموش‌اند تا فقط '
+             'خود منو دیده شود.')
+    doc.gallery([(p, l) for p, l in zip(doc.menu_pics, ['PLAY انتخاب‌شده', 'SHIP انتخاب‌شده',
+                                                         'OPTS انتخاب‌شده', 'BEST انتخاب‌شده'])],
+                4, 3, 'منوی اصلی با هر یک از چهار گزینه؛ خط زیر، گزینهٔ انتخاب‌شده را نشان می‌دهد.')
+    doc.table(['گزینه', 'با R چه چیزی باز می‌شود', 'توضیح'], [
+        ['PLAY', 'یک بازی تازه', 'بازی از مرحلهٔ ۱ با سفینه و سختی انتخاب‌شده شروع می‌شود؛ '
+                                 'جان‌ها و مهمات طبق سختی و سفینه پر می‌شوند و امتیاز صفر است.'],
+        ['SHIP', 'آشیانه', 'انتخاب یکی از سه سفینهٔ BOLT، DART و TWIN (بخش ۳.۷).'],
+        ['OPTS', 'تنظیمات', 'روشنایی، صدا، سطح سختی و آزمون LED (بخش ۳.۷ و ۳.۱۳).'],
+        ['BEST', 'بهترین امتیاز', 'بالاترین امتیاز، مرحله‌ای که به آن رسید و سختی آن (بخش ۳.۱۱).'],
+    ], [2.5, 4, 10.5], 'گزینه‌های منوی اصلی.')
+    doc.table(['کلید', 'کار در منو'], [
+        ['W', 'رفتن به گزینهٔ بالایی (از PLAY به BEST می‌چرخد) با یک بوق کوتاه'],
+        ['S', 'رفتن به گزینهٔ پایینی (از BEST به PLAY می‌چرخد) با یک بوق کوتاه'],
+        ['R', 'باز کردن گزینهٔ انتخاب‌شده با یک بوق بلندتر'],
+        ['Q', 'بازگشت به صفحهٔ عنوان'],
+        ['M / B', 'روشن و خاموش کردن صدا و تغییر روشنایی (در همهٔ صفحه‌ها کار می‌کنند)'],
+    ], [3, 14], 'کلیدها در منوی اصلی.')
+    doc.rich('منو آخرین گزینهٔ انتخاب‌شده را به خاطر می‌سپارد: مثلاً پس از بازگشت از آشیانه، '
+             'خط زیر هنوز روی SHIP است. پس از پایان یک بازی (GAME OVER یا پیروزی) یا خروج از بازی '
+             'با Q در صفحهٔ مکث هم دوباره به همین منو برمی‌گردید. در کد، این بخش در فایل `menu.h` '
+             'است (بخش ۴.۱۳): تابع `menuUpdate()` کلیدها را می‌خواند و گزینهٔ انتخاب‌شده را '
+             'برمی‌گرداند و `menuDraw()` منو را می‌کشد؛ ماشین حالت `void_runner.ino` سپس صفحهٔ '
+             'مربوط را باز می‌کند.')
+
+
 class FaDoc(md.Doc):
     FIG_LABEL, TAB_LABEL = 'شکل', 'جدول'
+    menu_pics = []
 
     def h(self, text, level):
+        if text == '3.7 Hangar and options':        # the menu part goes at the end of 3.6
+            menu_section(self)
         return super().h(T(text), level)
 
     def p(self, text='', **kw):
@@ -146,6 +210,7 @@ def cover(doc):
 def main():
     pics = md.make_media()
     doc = FaDoc()
+    doc.menu_pics = menu_pictures()
     cover(doc)
     md.hardware_page(doc, pics)
     md.performance(doc, pics)
